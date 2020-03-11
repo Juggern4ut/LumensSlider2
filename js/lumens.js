@@ -19,10 +19,12 @@ var Lumens = /** @class */ (function () {
             this.container = selector;
         }
         this.logWarnings = logWarnings;
+        this.initialOptions = options;
         this.setOptions(options);
         this.createWrapper();
         this.styleSlides();
         this.addDragListeners();
+        this.responsiveHandler();
         this.options.onInit();
     }
     /**
@@ -41,21 +43,51 @@ var Lumens = /** @class */ (function () {
             preventSelection: true,
             freeScroll: false,
             animationSpeed: 200,
+            responsive: [],
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
             onAnimating: function () { },
             onFinishAnimating: function () { },
-            onDestroy: function () { }
+            onDestroy: function () { },
+            onChangeResponsive: function () { }
         };
         Object.keys(defaultOptions).forEach(function (key) {
             if (options[key] !== undefined && options[key] !== null) {
                 _this.options[key] = options[key];
             }
-            else {
+            else if (key !== "responsive") {
                 _this.options[key] = defaultOptions[key];
             }
         });
+    };
+    Lumens.prototype.responsiveHandler = function () {
+        var _this = this;
+        var previousResponsiveIndex = undefined;
+        var currentResponsiveIndex;
+        var resizeFunction = function () {
+            currentResponsiveIndex = undefined;
+            _this.initialOptions.responsive.forEach(function (res, index) {
+                if (window.innerWidth < res.width) {
+                    currentResponsiveIndex = index;
+                }
+            });
+            if (previousResponsiveIndex !== currentResponsiveIndex) {
+                previousResponsiveIndex = currentResponsiveIndex;
+                if (currentResponsiveIndex !== undefined) {
+                    _this.setOptions(_this.initialOptions.responsive[currentResponsiveIndex].options);
+                }
+                else {
+                    _this.setOptions(_this.initialOptions);
+                }
+                _this.styleSlides();
+                _this.options.onChangeResponsive();
+            }
+            _this.gotoPage(_this.currentPage, false);
+        };
+        //Call function on init and resize
+        resizeFunction();
+        window.addEventListener("resize", resizeFunction);
     };
     /**
      * Will create a wrapper and fill

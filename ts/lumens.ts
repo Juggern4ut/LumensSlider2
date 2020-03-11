@@ -1,4 +1,9 @@
-declare type NoParamVoidFunction = () => void;
+declare type CallbackFunction = () => void;
+
+interface ResponsiveObject {
+  width: number;
+  options?: Options;
+}
 
 interface Options {
   /** The amount of slides that should be displayed in a single page */
@@ -9,18 +14,22 @@ interface Options {
   freeScroll?: boolean;
   /** Amount of milliseconds it takes to animate to a page */
   animationSpeed?: number;
+  /** Special options for certain screen widths */
+  responsive?: ResponsiveObject[];
   /** Callback that is called whenever the user drags the slideshow*/
-  onDragging?: NoParamVoidFunction;
+  onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
-  onStopDragging?: NoParamVoidFunction;
+  onStopDragging?: CallbackFunction;
   /** Callback that is called when an animation starts */
-  onAnimating?: NoParamVoidFunction;
+  onAnimating?: CallbackFunction;
   /** Callback that is called when an animation is finished */
-  onFinishAnimating?: NoParamVoidFunction;
+  onFinishAnimating?: CallbackFunction;
   /** Callback that is called when the slider is destoyed */
-  onDestroy?: NoParamVoidFunction;
+  onDestroy?: CallbackFunction;
   /** Callback that is called when the slider finished initailizing */
-  onInit?: NoParamVoidFunction;
+  onInit?: CallbackFunction;
+  /** Callback that is called when a responsive breakpoint is reached */
+  onChangeResponsive?: CallbackFunction;
 }
 
 class Lumens {
@@ -28,6 +37,7 @@ class Lumens {
   wrapper: HTMLElement;
   slides: HTMLCollection;
   options: Options;
+  initialOptions: Options;
   currentPosX: number = 0;
   currentPage: number = 0;
   logWarnings: boolean;
@@ -55,12 +65,14 @@ class Lumens {
     }
 
     this.logWarnings = logWarnings;
+    this.initialOptions = options;
 
     this.setOptions(options);
 
     this.createWrapper();
     this.styleSlides();
     this.addDragListeners();
+    this.responsiveHandler();
 
     this.options.onInit();
   }
@@ -80,21 +92,55 @@ class Lumens {
       preventSelection: true,
       freeScroll: false,
       animationSpeed: 200,
+      responsive: [],
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
       onAnimating: () => {},
       onFinishAnimating: () => {},
-      onDestroy: () => {}
+      onDestroy: () => {},
+      onChangeResponsive: () => {}
     };
 
     Object.keys(defaultOptions).forEach(key => {
       if (options[key] !== undefined && options[key] !== null) {
         this.options[key] = options[key];
-      } else {
+      } else if (key !== "responsive") {
         this.options[key] = defaultOptions[key];
       }
     });
+  }
+
+  responsiveHandler() {
+    let previousResponsiveIndex = undefined;
+    let currentResponsiveIndex;
+
+    const resizeFunction = () => {
+      currentResponsiveIndex = undefined;
+      this.initialOptions.responsive.forEach((res, index) => {
+        if (window.innerWidth < res.width) {
+          currentResponsiveIndex = index;
+        }
+      });
+
+      if (previousResponsiveIndex !== currentResponsiveIndex) {
+        previousResponsiveIndex = currentResponsiveIndex;
+        if (currentResponsiveIndex !== undefined) {
+          this.setOptions(
+            this.initialOptions.responsive[currentResponsiveIndex].options
+          );
+        } else {
+          this.setOptions(this.initialOptions);
+        }
+        this.styleSlides();
+        this.options.onChangeResponsive();
+      }
+      this.gotoPage(this.currentPage, false);
+    };
+
+    //Call function on init and resize
+    resizeFunction();
+    window.addEventListener("resize", resizeFunction);
   }
 
   /**
