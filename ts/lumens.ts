@@ -1,22 +1,26 @@
-/**
- * TODO
- * - Touch handlers for mobile
- * - Responsive
- */
-
-declare type fEmptyVoid = () => void;
+declare type NoParamVoidFunction = () => void;
 
 interface Options {
+  /** The amount of slides that should be displayed in a single page */
   slidesPerPage?: number;
+  /** Will set 'userSelect' to none if set to true */
   preventSelection?: boolean;
+  /** If set to true, the slideshow will no longer jump to the closest slide on stop drag */
   freeScroll?: boolean;
+  /** Amount of milliseconds it takes to animate to a page */
   animationSpeed?: number;
-  onDragging?: fEmptyVoid;
-  onStopDragging?: fEmptyVoid;
-  onAnimating?: fEmptyVoid;
-  onFinishAnimating?: fEmptyVoid;
-  onDestroy?: fEmptyVoid;
-  onInit?: fEmptyVoid;
+  /** Callback that is called whenever the user drags the slideshow*/
+  onDragging?: NoParamVoidFunction;
+  /** Callback that is called whenever the user stops dragging */
+  onStopDragging?: NoParamVoidFunction;
+  /** Callback that is called when an animation starts */
+  onAnimating?: NoParamVoidFunction;
+  /** Callback that is called when an animation is finished */
+  onFinishAnimating?: NoParamVoidFunction;
+  /** Callback that is called when the slider is destoyed */
+  onDestroy?: NoParamVoidFunction;
+  /** Callback that is called when the slider finished initailizing */
+  onInit?: NoParamVoidFunction;
 }
 
 class Lumens {

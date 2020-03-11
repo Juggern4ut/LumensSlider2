@@ -1,8 +1,3 @@
-/**
- * TODO
- * - Touch handlers for mobile
- * - Responsive
- */
 var Lumens = /** @class */ (function () {
     /**
      * Will setup the DOM and EventListeners
