@@ -25,8 +25,7 @@ window.onload = function () {
             {
                 width: 900,
                 options: {
-                    slidesPerPage: 1,
-                    freeScroll: true
+                    slidesPerPage: 1
                 }
             }
         ]
