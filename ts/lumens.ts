@@ -299,7 +299,34 @@ class Lumens {
     let deltaX = 0;
     let hasFocus = false;
 
-    document.addEventListener("mouseup", () => {
+    const startDragFunction = e => {
+      this.stopAutoplayInterval();
+      hasFocus = true;
+
+      if (e.type === "touchstart") {
+        initialX = e.targetTouches[0].pageX;
+      } else {
+        initialX = e.pageX;
+      }
+
+      isDragging = true;
+      this.transition(false);
+    };
+
+    const moveDragFunction = e => {
+      if (!isDragging) return false;
+
+      if (e.type === "touchmove") {
+        deltaX = initialX - e.targetTouches[0].pageX + this.currentPosX;
+      } else {
+        deltaX = initialX - e.pageX + this.currentPosX;
+      }
+
+      this.wrapper.style.right = deltaX + "px";
+      this.options.onDragging(this);
+    };
+
+    const releaseDragFunction = e => {
       if (!hasFocus) {
         return false;
       }
@@ -310,22 +337,16 @@ class Lumens {
       this.currentPosX = deltaX;
       this.options.onStopDragging(this);
       this.validateAndCorrectDragPosition();
-    });
+    };
 
-    this.container.addEventListener("mousedown", e => {
-      this.stopAutoplayInterval();
-      hasFocus = true;
-      initialX = e.pageX;
-      isDragging = true;
-      this.transition(false);
-    });
+    document.addEventListener("mouseup", releaseDragFunction);
+    document.addEventListener("touchend", releaseDragFunction);
 
-    document.addEventListener("mousemove", e => {
-      if (!isDragging) return false;
-      deltaX = initialX - e.pageX + this.currentPosX;
-      this.wrapper.style.right = deltaX + "px";
-      this.options.onDragging(this);
-    });
+    document.addEventListener("mousemove", moveDragFunction);
+    document.addEventListener("touchmove", moveDragFunction);
+
+    this.container.addEventListener("mousedown", startDragFunction);
+    this.container.addEventListener("touchstart", startDragFunction);
   }
 
   /**

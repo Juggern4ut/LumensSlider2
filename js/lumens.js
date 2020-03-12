@@ -218,7 +218,31 @@ var Lumens = /** @class */ (function () {
         var initialX = 0;
         var deltaX = 0;
         var hasFocus = false;
-        document.addEventListener("mouseup", function () {
+        var startDragFunction = function (e) {
+            _this.stopAutoplayInterval();
+            hasFocus = true;
+            if (e.type === "touchstart") {
+                initialX = e.targetTouches[0].pageX;
+            }
+            else {
+                initialX = e.pageX;
+            }
+            isDragging = true;
+            _this.transition(false);
+        };
+        var moveDragFunction = function (e) {
+            if (!isDragging)
+                return false;
+            if (e.type === "touchmove") {
+                deltaX = initialX - e.targetTouches[0].pageX + _this.currentPosX;
+            }
+            else {
+                deltaX = initialX - e.pageX + _this.currentPosX;
+            }
+            _this.wrapper.style.right = deltaX + "px";
+            _this.options.onDragging(_this);
+        };
+        var releaseDragFunction = function (e) {
             if (!hasFocus) {
                 return false;
             }
@@ -228,21 +252,13 @@ var Lumens = /** @class */ (function () {
             _this.currentPosX = deltaX;
             _this.options.onStopDragging(_this);
             _this.validateAndCorrectDragPosition();
-        });
-        this.container.addEventListener("mousedown", function (e) {
-            _this.stopAutoplayInterval();
-            hasFocus = true;
-            initialX = e.pageX;
-            isDragging = true;
-            _this.transition(false);
-        });
-        document.addEventListener("mousemove", function (e) {
-            if (!isDragging)
-                return false;
-            deltaX = initialX - e.pageX + _this.currentPosX;
-            _this.wrapper.style.right = deltaX + "px";
-            _this.options.onDragging(_this);
-        });
+        };
+        document.addEventListener("mouseup", releaseDragFunction);
+        document.addEventListener("touchend", releaseDragFunction);
+        document.addEventListener("mousemove", moveDragFunction);
+        document.addEventListener("touchmove", moveDragFunction);
+        this.container.addEventListener("mousedown", startDragFunction);
+        this.container.addEventListener("touchstart", startDragFunction);
     };
     /**
      * Will set the scrollposition of the
