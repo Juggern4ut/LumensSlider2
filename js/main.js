@@ -4,6 +4,7 @@ window.onload = function () {
         freeScroll: false,
         animationSpeed: 200,
         loop: true,
+        autoplay: false,
         onInit: function () { return console.log("%cSlider initialized", "color: red;"); },
         onDragging: function () { return console.log("%cDragging", "color: green;"); },
         onStopDragging: function () { return console.log("%cDragging stoped", "color: green;"); },

@@ -34,6 +34,7 @@ var Lumens = /** @class */ (function () {
         }
         this.gotoPage(this.currentPage, false);
         this.options.onInit(this);
+        this.startAutoplayInterval();
     }
     /**
      * Will define the default settings
@@ -54,6 +55,7 @@ var Lumens = /** @class */ (function () {
             responsive: [],
             loop: false,
             startingPage: 0,
+            autoplay: false,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -73,6 +75,37 @@ var Lumens = /** @class */ (function () {
             }
         });
         this.currentPage = this.options.startingPage;
+    };
+    /**
+     * Will start the autoplay interval
+     * @returns {void}
+     */
+    Lumens.prototype.startAutoplayInterval = function () {
+        var _this = this;
+        if (this.options.autoplay) {
+            clearInterval(this.autoplayInterval);
+            this.autoplayInterval = setInterval(function () {
+                var targetPage;
+                if (_this.options.loop) {
+                    targetPage = _this.currentPage + 1;
+                }
+                else {
+                    targetPage =
+                        _this.currentPage + 1 + _this.options.slidesPerPage >
+                            _this.slides.length
+                            ? 0
+                            : _this.currentPage + 1;
+                }
+                _this.gotoPage(targetPage);
+            }, this.options.autoplay);
+        }
+    };
+    /**
+     * Will stop the autoplay interval
+     * @returns {void}
+     */
+    Lumens.prototype.stopAutoplayInterval = function () {
+        clearInterval(this.autoplayInterval);
     };
     /**
      * Updates the current slider settings based
@@ -191,11 +224,13 @@ var Lumens = /** @class */ (function () {
             }
             hasFocus = false;
             isDragging = false;
+            _this.startAutoplayInterval();
             _this.currentPosX = deltaX;
             _this.options.onStopDragging(_this);
             _this.validateAndCorrectDragPosition();
         });
         this.container.addEventListener("mousedown", function (e) {
+            _this.stopAutoplayInterval();
             hasFocus = true;
             initialX = e.pageX;
             isDragging = true;

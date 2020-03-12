@@ -20,6 +20,8 @@ interface Options {
   loop?: boolean;
   /** The page the slideshow should start on */
   startingPage?: number;
+  /** Amount of milliseconds until the slideshow goes to the next slide automatically */
+  autoplay?: number | false;
   /** Callback that is called whenever the user drags the slideshow*/
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -49,7 +51,7 @@ class Lumens {
   currentPosX: number = 0;
   currentPage: number = 0;
   logWarnings: boolean;
-
+  autoplayInterval: number;
   animationTimeout: number;
 
   /**
@@ -91,8 +93,8 @@ class Lumens {
     }
 
     this.gotoPage(this.currentPage, false);
-
     this.options.onInit(this);
+    this.startAutoplayInterval();
   }
 
   /**
@@ -113,6 +115,7 @@ class Lumens {
       responsive: [],
       loop: false,
       startingPage: 0,
+      autoplay: false,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -133,6 +136,38 @@ class Lumens {
     });
 
     this.currentPage = this.options.startingPage;
+  }
+
+  /**
+   * Will start the autoplay interval
+   * @returns {void}
+   */
+  startAutoplayInterval(): void {
+    if (this.options.autoplay) {
+      clearInterval(this.autoplayInterval);
+      this.autoplayInterval = setInterval(() => {
+        let targetPage;
+        if (this.options.loop) {
+          targetPage = this.currentPage + 1;
+        } else {
+          targetPage =
+            this.currentPage + 1 + this.options.slidesPerPage >
+            this.slides.length
+              ? 0
+              : this.currentPage + 1;
+        }
+
+        this.gotoPage(targetPage);
+      }, this.options.autoplay);
+    }
+  }
+
+  /**
+   * Will stop the autoplay interval
+   * @returns {void}
+   */
+  stopAutoplayInterval(): void {
+    clearInterval(this.autoplayInterval);
   }
 
   /**
@@ -271,12 +306,14 @@ class Lumens {
 
       hasFocus = false;
       isDragging = false;
+      this.startAutoplayInterval();
       this.currentPosX = deltaX;
       this.options.onStopDragging(this);
       this.validateAndCorrectDragPosition();
     });
 
     this.container.addEventListener("mousedown", e => {
+      this.stopAutoplayInterval();
       hasFocus = true;
       initialX = e.pageX;
       isDragging = true;
