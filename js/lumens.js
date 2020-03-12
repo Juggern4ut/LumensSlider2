@@ -25,6 +25,10 @@ var Lumens = /** @class */ (function () {
         this.styleSlides();
         this.addDragListeners();
         this.responsiveHandler();
+        if (this.options.loop) {
+            this.createCloneNodes();
+        }
+        this.gotoPage(this.currentPage, false);
         this.options.onInit();
     }
     /**
@@ -44,6 +48,8 @@ var Lumens = /** @class */ (function () {
             freeScroll: false,
             animationSpeed: 200,
             responsive: [],
+            loop: false,
+            startingPage: 0,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -62,6 +68,7 @@ var Lumens = /** @class */ (function () {
                 _this.options[key] = defaultOptions[key];
             }
         });
+        this.currentPage = this.options.startingPage;
     };
     /**
      * Updates the current slider settings based
@@ -114,6 +121,34 @@ var Lumens = /** @class */ (function () {
         this.wrapper.style.position = "relative";
         this.wrapper.style.right = "0";
         this.slides = this.wrapper.children;
+    };
+    /**
+     * Creates clones of the last and first slides
+     * (depending on slidesPerPage) and appends them
+     * to the start end end of the slider. This is
+     * used for the infiniteLoop option
+     * @returns {void}
+     */
+    Lumens.prototype.createCloneNodes = function () {
+        var _this = this;
+        var startClones = [];
+        var endClones = [];
+        for (var i = 0; i < this.options.slidesPerPage; i++) {
+            var startCloneNode = this.slides[i].cloneNode(true);
+            startCloneNode.classList.add("lumens__clone");
+            startClones.push(startCloneNode);
+            var endIndex = this.slides.length - 1 - i;
+            var endCloneNode = this.slides[endIndex].cloneNode(true);
+            endCloneNode.classList.add("lumens__clone");
+            endClones.push(endCloneNode);
+        }
+        startClones.forEach(function (clone) {
+            _this.wrapper.append(clone);
+        });
+        endClones.forEach(function (clone) {
+            _this.wrapper.prepend(clone);
+        });
+        this.currentPage += this.options.slidesPerPage;
     };
     /**
      * Will append certain needed styles to the
@@ -187,8 +222,27 @@ var Lumens = /** @class */ (function () {
                 _this.options.onFinishAnimating();
                 if (changedSlide) {
                     _this.options.onSlideChanged();
+                    _this.loopHandler();
                 }
             }, this.options.animationSpeed);
+        }
+    };
+    /**
+     * Checks if the slide was scrolled to the very beginning
+     * or the very end and jumps to the opposite end if the
+     * infinite loop option is set
+     * @returns {void}
+     */
+    Lumens.prototype.loopHandler = function () {
+        var cp = this.currentPage;
+        var loop = this.options.loop;
+        if (cp === 0 && loop) {
+            var endIndex = this.slides.length - this.options.slidesPerPage * 2;
+            this.gotoPage(endIndex, false);
+        }
+        else if (cp === this.slides.length - this.options.slidesPerPage && loop) {
+            var startIndex = this.options.slidesPerPage;
+            this.gotoPage(startIndex, false);
         }
     };
     /**
@@ -268,7 +322,7 @@ var Lumens = /** @class */ (function () {
      */
     Lumens.prototype.gotoPage = function (page, animate) {
         if (animate === void 0) { animate = true; }
-        if (page > this.slides.length)
+        if (page > this.slides.length - this.options.slidesPerPage)
             return false;
         var totalOffset = 0;
         for (var i = 0; i < page; i++) {

@@ -3,6 +3,7 @@ window.onload = () => {
     slidesPerPage: 3,
     freeScroll: false,
     animationSpeed: 1000,
+    loop: false,
     onInit: () => console.log("%cSlider initialized", "color: red;"),
     onDragging: () => console.log("%cDragging", "color: green;"),
     onStopDragging: () => console.log("%cDragging stoped", "color: green;"),

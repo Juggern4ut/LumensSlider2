@@ -16,6 +16,10 @@ interface Options {
   animationSpeed?: number;
   /** Special options for certain screen widths */
   responsive?: ResponsiveObject[];
+  /** If set to true, the slider can be scrolled infinitly */
+  loop?: boolean;
+  /** The page the slideshow should start on */
+  startingPage?: number;
   /** Callback that is called whenever the user drags the slideshow*/
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -78,6 +82,12 @@ class Lumens {
     this.addDragListeners();
     this.responsiveHandler();
 
+    if (this.options.loop) {
+      this.createCloneNodes();
+    }
+
+    this.gotoPage(this.currentPage, false);
+
     this.options.onInit();
   }
 
@@ -97,6 +107,8 @@ class Lumens {
       freeScroll: false,
       animationSpeed: 200,
       responsive: [],
+      loop: false,
+      startingPage: 0,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -115,6 +127,8 @@ class Lumens {
         this.options[key] = defaultOptions[key];
       }
     });
+
+    this.currentPage = this.options.startingPage;
   }
 
   /**
@@ -175,6 +189,38 @@ class Lumens {
     this.wrapper.style.right = "0";
 
     this.slides = this.wrapper.children;
+  }
+
+  /**
+   * Creates clones of the last and first slides
+   * (depending on slidesPerPage) and appends them
+   * to the start end end of the slider. This is
+   * used for the infiniteLoop option
+   * @returns {void}
+   */
+  createCloneNodes(): void {
+    let startClones: HTMLElement[] = [];
+    let endClones: HTMLElement[] = [];
+    for (let i = 0; i < this.options.slidesPerPage; i++) {
+      const startCloneNode = this.slides[i].cloneNode(true) as HTMLElement;
+      startCloneNode.classList.add("lumens__clone");
+      startClones.push(startCloneNode);
+
+      const endIndex = this.slides.length - 1 - i;
+      const endCloneNode = this.slides[endIndex].cloneNode(true) as HTMLElement;
+      endCloneNode.classList.add("lumens__clone");
+      endClones.push(endCloneNode);
+    }
+
+    startClones.forEach(clone => {
+      this.wrapper.append(clone);
+    });
+
+    endClones.forEach(clone => {
+      this.wrapper.prepend(clone);
+    });
+
+    this.currentPage += this.options.slidesPerPage;
   }
 
   /**
@@ -263,8 +309,29 @@ class Lumens {
         this.options.onFinishAnimating();
         if (changedSlide) {
           this.options.onSlideChanged();
+
+          this.loopHandler();
         }
       }, this.options.animationSpeed);
+    }
+  }
+
+  /**
+   * Checks if the slide was scrolled to the very beginning
+   * or the very end and jumps to the opposite end if the
+   * infinite loop option is set
+   * @returns {void}
+   */
+  loopHandler(): void {
+    const cp = this.currentPage;
+    const loop = this.options.loop;
+
+    if (cp === 0 && loop) {
+      const endIndex = this.slides.length - this.options.slidesPerPage * 2;
+      this.gotoPage(endIndex, false);
+    } else if (cp === this.slides.length - this.options.slidesPerPage && loop) {
+      const startIndex = this.options.slidesPerPage;
+      this.gotoPage(startIndex, false);
     }
   }
 
@@ -348,7 +415,7 @@ class Lumens {
    * @returns {boolean} Will return false if the given page doesn't exist
    */
   gotoPage(page: number, animate: boolean = true): boolean {
-    if (page > this.slides.length) return false;
+    if (page > this.slides.length - this.options.slidesPerPage) return false;
 
     let totalOffset = 0;
     for (let i = 0; i < page; i++) {
