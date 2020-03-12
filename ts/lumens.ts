@@ -145,7 +145,7 @@ class Lumens {
   startAutoplayInterval(): void {
     if (this.options.autoplay) {
       clearInterval(this.autoplayInterval);
-      this.autoplayInterval = setInterval(() => {
+      this.autoplayInterval = window.setInterval(() => {
         let targetPage;
         if (this.options.loop) {
           targetPage = this.currentPage + 1;
@@ -373,7 +373,7 @@ class Lumens {
 
     if (animate) {
       clearTimeout(this.animationTimeout);
-      this.animationTimeout = setTimeout(() => {
+      this.animationTimeout = window.setTimeout(() => {
         this.transition(false);
         this.options.onFinishAnimating(this);
         if (changedSlide) {

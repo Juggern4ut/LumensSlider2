@@ -84,7 +84,7 @@ var Lumens = /** @class */ (function () {
         var _this = this;
         if (this.options.autoplay) {
             clearInterval(this.autoplayInterval);
-            this.autoplayInterval = setInterval(function () {
+            this.autoplayInterval = window.setInterval(function () {
                 var targetPage;
                 if (_this.options.loop) {
                     targetPage = _this.currentPage + 1;
@@ -278,7 +278,7 @@ var Lumens = /** @class */ (function () {
         this.wrapper.style.right = offset + "px";
         if (animate) {
             clearTimeout(this.animationTimeout);
-            this.animationTimeout = setTimeout(function () {
+            this.animationTimeout = window.setTimeout(function () {
                 _this.transition(false);
                 _this.options.onFinishAnimating(_this);
                 if (changedSlide) {

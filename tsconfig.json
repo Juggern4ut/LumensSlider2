@@ -4,6 +4,7 @@
     "rootDir": "./ts",
     "outDir": "./js",
     "watch": true,
-    "lib": ["dom", "ES2017"]
+    "lib": ["dom", "es2017"],
+    "module": "commonjs",
   }
 }

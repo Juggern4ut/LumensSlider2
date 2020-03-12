@@ -5,72 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="js/lumens.js"></script>
     <script src="js/main.js"></script>
-    <title>Document</title>
-    <style>
-      #test {
-        outline: 1px solid #dedede;
-      }
-      #test div div {
-        margin: 10px;
-        border: 1px solid salmon;
-        padding: 5px;
-        text-align: center;
-      }
-      #test div #slide3 {
-        margin: 50px;
-      }
-
-      #test div #slide2,
-      #test div #slide9 {
-        margin: 0;
-      }
-
-      #test div #slide7 {
-        border-right: 50px solid salmon;
-        border-left: 91px solid salmon;
-        margin-right: 0;
-        margin-left: 0;
-      }
-    </style>
+    <title>Lumens 2</title>
+    <link rel="stylesheet" href="webpage/dist/css/main.css">
   </head>
   <body>
-    <div id="test">
-      <div>
-        <h2>Slide 1</h2>
-      </div>
-      <div id="slide2">
-        <h2>Slide 2</h2>
-      </div>
-      <div id="slide3">
-        <h2>Slide 3</h2>
-      </div>
-      <div>
-        <h2>Slide 4</h2>
-      </div>
-      <div>
-        <h2>Slide 5</h2>
-      </div>
-      <div>
-        <h2>Slide 6</h2>
-      </div>
-      <div id="slide7">
-        <h2>Fat border</h2>
-      </div>
-      <div>
-        <h2>Slide 8</h2>
-      </div>
-      <div id="slide9">
-        <h2>Slide 9</h2>
-      </div>
-      <div>
-        <h2>Slide 10</h2>
-      </div>
-      <div>
-        <h2>Slide 11</h2>
-      </div>
-      <div>
-        <h2>Slide 12</h2>
-      </div>
-    </div>
+
+    <header class="header">
+      <div class="header__image"></div>
+      <h1 class="header__title">Lumens 2</h1>
+      <span class="header__title-span">becuase it's</span>
+      <section class="header__slider">
+        <div class="header__slide"><h2 class="header__slide-title">Fast</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Clean</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Documented</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Vanilla</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Tiny</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Compatible</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Responsive</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Lightweight</h2></div>
+        <div class="header__slide"><h2 class="header__slide-title">Configurable</h2></div>
+      </section>
+    </header>
+    <nav class="nav">
+      <ul class="nav__list">
+        <li class="nav__item"><a class="nav__link">Demo</a></li>
+        <li class="nav__item"><a class="nav__link">Download</a></li>
+        <li class="nav__item"><a class="nav__link">Documentation</a></li>
+      </ul>
+    </nav>
+    
   </body>
 </html>

@@ -5,9 +5,20 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "startup": "live-server"
+    "startup": "live-server",
+    "gulp": "gulp"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^9.7.4",
+    "gulp": "^4.0.2",
+    "gulp-changed": "^4.0.2",
+    "gulp-csso": "^4.0.1",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5"
+  }
 }

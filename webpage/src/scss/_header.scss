@@ -1,0 +1,38 @@
+.header {
+  position: relative;
+  color: #fff;
+  text-align: center;
+  padding: 5rem;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-position: center;
+    background-size: cover;
+    background-image: url("../img/header.jpg");
+    z-index: -1;
+  }
+
+  &__slider{
+    width: 500px;
+    margin: 0 auto;
+  }
+
+  &__slide-title{
+    font-size: 5rem;
+  }
+
+  &__title {
+    font-size: 6rem;
+  }
+  
+  &__title-span{
+    margin-top: 2rem;
+    font-size: 3rem;
+    display: block;
+    text-shadow: 1px 1px 0 #000;
+  }
+}
