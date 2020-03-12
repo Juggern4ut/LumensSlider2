@@ -30,6 +30,10 @@ interface Options {
   onInit?: CallbackFunction;
   /** Callback that is called when a responsive breakpoint is reached */
   onChangeResponsive?: CallbackFunction;
+  /** Callback that is called when the slide is starting to change */
+  onSlideChange?: CallbackFunction;
+  /** Callback that is called when the slide is changed */
+  onSlideChanged?: CallbackFunction;
 }
 
 class Lumens {
@@ -99,7 +103,9 @@ class Lumens {
       onAnimating: () => {},
       onFinishAnimating: () => {},
       onDestroy: () => {},
-      onChangeResponsive: () => {}
+      onChangeResponsive: () => {},
+      onSlideChange: () => {},
+      onSlideChanged: () => {}
     };
 
     Object.keys(defaultOptions).forEach(key => {
@@ -111,6 +117,11 @@ class Lumens {
     });
   }
 
+  /**
+   * Updates the current slider settings based
+   * on the current width of the window
+   * @returns {void}
+   */
   responsiveHandler() {
     let previousResponsiveIndex = undefined;
     let currentResponsiveIndex;
@@ -146,7 +157,6 @@ class Lumens {
   /**
    * Will create a wrapper and fill
    * the slides into it
-   * @author {Lukas Meier}
    * @returns {void}
    */
   createWrapper(): void {
@@ -170,7 +180,6 @@ class Lumens {
   /**
    * Will append certain needed styles to the
    * slides in the slideshow
-   * @author {Lukas Meier}
    * @returns {void}
    */
   styleSlides(): void {
@@ -197,7 +206,6 @@ class Lumens {
   /**
    * Will add all the needed event listeners
    * to the slideshow to allow dragging it around
-   * @author {Lukas Meier}
    * @returns {void}
    */
   addDragListeners(): void {
@@ -221,7 +229,7 @@ class Lumens {
     this.container.addEventListener("mousemove", e => {
       if (!isDragging) return false;
       deltaX = initialX - e.pageX + this.currentPosX;
-      this.setDragPosition(deltaX);
+      this.wrapper.style.right = deltaX + "px";
       this.options.onDragging();
     });
   }
@@ -230,8 +238,17 @@ class Lumens {
    * Will set the scrollposition of the
    * slideshow
    * @param offset The offset to set the slideshow to
+   * @returns {void}
    */
-  setDragPosition(offset: number, animate?: boolean): void {
+  setDragPosition(
+    offset: number,
+    animate?: boolean,
+    changedSlide?: boolean
+  ): void {
+    if (changedSlide) {
+      this.options.onSlideChange();
+    }
+
     if (animate) {
       this.options.onAnimating();
       this.transition(true);
@@ -244,6 +261,9 @@ class Lumens {
       this.animationTimeout = setTimeout(() => {
         this.transition(false);
         this.options.onFinishAnimating();
+        if (changedSlide) {
+          this.options.onSlideChanged();
+        }
       }, this.options.animationSpeed);
     }
   }
@@ -264,10 +284,10 @@ class Lumens {
   /**
    * Will check if the current XPosition is
    * out of bounds and correct it, if so
-   * @author {Lukas Meier}
    * @returns {void}
    */
   validateAndCorrectDragPosition(): void {
+    let initialPage = this.currentPage;
     let totalWidth = 0;
     let animate = false;
     for (let i = 0; i < this.slides.length - this.options.slidesPerPage; i++) {
@@ -284,18 +304,23 @@ class Lumens {
       this.currentPage = this.slides.length - this.options.slidesPerPage;
       animate = true;
     } else if (this.options.freeScroll === false) {
-      this.getClosestSlide(this.currentPosX);
+      let closest = this.getClosestSlide(this.currentPosX);
+      this.gotoPage(closest, true);
     }
 
-    this.setDragPosition(this.currentPosX, animate);
+    if (this.currentPosX <= 0 || this.currentPosX >= totalWidth) {
+      const changedSlide = initialPage !== this.currentPage;
+      this.setDragPosition(this.currentPosX, animate, changedSlide);
+    }
   }
 
   /**
    * Will calculate the closest page to the
    * given parameter and jump to said page
    * @param posX The position to which the closest slide should be calculated
+   * @returns {void}
    */
-  getClosestSlide(posX: number) {
+  getClosestSlide(posX: number): number {
     let slideCoordinates: number[] = [];
     let total = 0;
     for (let i = 0; i < this.slides.length; i++) {
@@ -312,7 +337,7 @@ class Lumens {
       return Math.abs(p) > Math.abs(n - posX) ? n - posX : p;
     }, Infinity) + posX;
 
-    this.gotoPage(index, true);
+    return index;
   }
 
   /**
@@ -320,6 +345,7 @@ class Lumens {
    * given page and scroll to it
    * @param page The page to go to (starting at 0)
    * @param animate If set to true, there will be a fluent change to the page instead of a instant one
+   * @returns {boolean} Will return false if the given page doesn't exist
    */
   gotoPage(page: number, animate: boolean = true): boolean {
     if (page > this.slides.length) return false;
@@ -330,9 +356,11 @@ class Lumens {
       totalOffset += this.getSlideWidth(slide);
     }
 
+    const changed = page !== this.currentPage;
     this.currentPosX = totalOffset;
-    this.setDragPosition(totalOffset, animate);
+    this.setDragPosition(totalOffset, animate, changed);
     this.currentPage = page;
+    return true;
   }
 
   /**
@@ -355,6 +383,7 @@ class Lumens {
    * Will remove all styling and the wrapper to
    * restore the state before the slider was
    * initialized
+   * @returns {void}
    */
   destroy(): void {
     let slideAmount = this.slides.length;

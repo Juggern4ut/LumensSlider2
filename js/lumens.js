@@ -50,7 +50,9 @@ var Lumens = /** @class */ (function () {
             onAnimating: function () { },
             onFinishAnimating: function () { },
             onDestroy: function () { },
-            onChangeResponsive: function () { }
+            onChangeResponsive: function () { },
+            onSlideChange: function () { },
+            onSlideChanged: function () { }
         };
         Object.keys(defaultOptions).forEach(function (key) {
             if (options[key] !== undefined && options[key] !== null) {
@@ -61,6 +63,11 @@ var Lumens = /** @class */ (function () {
             }
         });
     };
+    /**
+     * Updates the current slider settings based
+     * on the current width of the window
+     * @returns {void}
+     */
     Lumens.prototype.responsiveHandler = function () {
         var _this = this;
         var previousResponsiveIndex = undefined;
@@ -92,7 +99,6 @@ var Lumens = /** @class */ (function () {
     /**
      * Will create a wrapper and fill
      * the slides into it
-     * @author {Lukas Meier}
      * @returns {void}
      */
     Lumens.prototype.createWrapper = function () {
@@ -112,7 +118,6 @@ var Lumens = /** @class */ (function () {
     /**
      * Will append certain needed styles to the
      * slides in the slideshow
-     * @author {Lukas Meier}
      * @returns {void}
      */
     Lumens.prototype.styleSlides = function () {
@@ -133,7 +138,6 @@ var Lumens = /** @class */ (function () {
     /**
      * Will add all the needed event listeners
      * to the slideshow to allow dragging it around
-     * @author {Lukas Meier}
      * @returns {void}
      */
     Lumens.prototype.addDragListeners = function () {
@@ -156,7 +160,7 @@ var Lumens = /** @class */ (function () {
             if (!isDragging)
                 return false;
             deltaX = initialX - e.pageX + _this.currentPosX;
-            _this.setDragPosition(deltaX);
+            _this.wrapper.style.right = deltaX + "px";
             _this.options.onDragging();
         });
     };
@@ -164,9 +168,13 @@ var Lumens = /** @class */ (function () {
      * Will set the scrollposition of the
      * slideshow
      * @param offset The offset to set the slideshow to
+     * @returns {void}
      */
-    Lumens.prototype.setDragPosition = function (offset, animate) {
+    Lumens.prototype.setDragPosition = function (offset, animate, changedSlide) {
         var _this = this;
+        if (changedSlide) {
+            this.options.onSlideChange();
+        }
         if (animate) {
             this.options.onAnimating();
             this.transition(true);
@@ -177,6 +185,9 @@ var Lumens = /** @class */ (function () {
             this.animationTimeout = setTimeout(function () {
                 _this.transition(false);
                 _this.options.onFinishAnimating();
+                if (changedSlide) {
+                    _this.options.onSlideChanged();
+                }
             }, this.options.animationSpeed);
         }
     };
@@ -196,10 +207,10 @@ var Lumens = /** @class */ (function () {
     /**
      * Will check if the current XPosition is
      * out of bounds and correct it, if so
-     * @author {Lukas Meier}
      * @returns {void}
      */
     Lumens.prototype.validateAndCorrectDragPosition = function () {
+        var initialPage = this.currentPage;
         var totalWidth = 0;
         var animate = false;
         for (var i = 0; i < this.slides.length - this.options.slidesPerPage; i++) {
@@ -217,14 +228,19 @@ var Lumens = /** @class */ (function () {
             animate = true;
         }
         else if (this.options.freeScroll === false) {
-            this.getClosestSlide(this.currentPosX);
+            var closest = this.getClosestSlide(this.currentPosX);
+            this.gotoPage(closest, true);
         }
-        this.setDragPosition(this.currentPosX, animate);
+        if (this.currentPosX <= 0 || this.currentPosX >= totalWidth) {
+            var changedSlide = initialPage !== this.currentPage;
+            this.setDragPosition(this.currentPosX, animate, changedSlide);
+        }
     };
     /**
      * Will calculate the closest page to the
      * given parameter and jump to said page
      * @param posX The position to which the closest slide should be calculated
+     * @returns {void}
      */
     Lumens.prototype.getClosestSlide = function (posX) {
         var slideCoordinates = [];
@@ -241,13 +257,14 @@ var Lumens = /** @class */ (function () {
             }
             return Math.abs(p) > Math.abs(n - posX) ? n - posX : p;
         }, Infinity) + posX;
-        this.gotoPage(index, true);
+        return index;
     };
     /**
      * Will calculate the offset ot the
      * given page and scroll to it
      * @param page The page to go to (starting at 0)
      * @param animate If set to true, there will be a fluent change to the page instead of a instant one
+     * @returns {boolean} Will return false if the given page doesn't exist
      */
     Lumens.prototype.gotoPage = function (page, animate) {
         if (animate === void 0) { animate = true; }
@@ -258,9 +275,11 @@ var Lumens = /** @class */ (function () {
             var slide = this.slides[i];
             totalOffset += this.getSlideWidth(slide);
         }
+        var changed = page !== this.currentPage;
         this.currentPosX = totalOffset;
-        this.setDragPosition(totalOffset, animate);
+        this.setDragPosition(totalOffset, animate, changed);
         this.currentPage = page;
+        return true;
     };
     /**
      * Will return the exact calculated amount
@@ -281,6 +300,7 @@ var Lumens = /** @class */ (function () {
      * Will remove all styling and the wrapper to
      * restore the state before the slider was
      * initialized
+     * @returns {void}
      */
     Lumens.prototype.destroy = function () {
         var slideAmount = this.slides.length;
