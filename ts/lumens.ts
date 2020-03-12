@@ -401,5 +401,6 @@ class Lumens {
     }
 
     this.options.onDestroy();
+    this.setOptions({});
   }
 }

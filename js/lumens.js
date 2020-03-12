@@ -314,6 +314,7 @@ var Lumens = /** @class */ (function () {
             this.container.append(slide);
         }
         this.options.onDestroy();
+        this.setOptions({});
     };
     return Lumens;
 }());
