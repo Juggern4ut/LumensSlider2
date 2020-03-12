@@ -7,6 +7,7 @@ var Lumens = /** @class */ (function () {
      * @param logWarnings If true, the slider may log errors and warnings to the console
      */
     function Lumens(selector, options, logWarnings) {
+        if (options === void 0) { options = {}; }
         this.currentPosX = 0;
         this.currentPage = 0;
         if (typeof selector === "string") {
@@ -17,6 +18,9 @@ var Lumens = /** @class */ (function () {
         }
         else if (selector instanceof HTMLElement) {
             this.container = selector;
+        }
+        if (!options.responsive) {
+            options.responsive = [];
         }
         this.logWarnings = logWarnings;
         this.initialOptions = options;
@@ -29,7 +33,7 @@ var Lumens = /** @class */ (function () {
             this.createCloneNodes();
         }
         this.gotoPage(this.currentPage, false);
-        this.options.onInit();
+        this.options.onInit(this);
     }
     /**
      * Will define the default settings
@@ -95,7 +99,7 @@ var Lumens = /** @class */ (function () {
                     _this.setOptions(_this.initialOptions);
                 }
                 _this.styleSlides();
-                _this.options.onChangeResponsive();
+                _this.options.onChangeResponsive(_this);
             }
             _this.gotoPage(_this.currentPage, false);
         };
@@ -180,23 +184,29 @@ var Lumens = /** @class */ (function () {
         var isDragging = false;
         var initialX = 0;
         var deltaX = 0;
+        var hasFocus = false;
         document.addEventListener("mouseup", function () {
+            if (!hasFocus) {
+                return false;
+            }
+            hasFocus = false;
             isDragging = false;
             _this.currentPosX = deltaX;
-            _this.options.onStopDragging();
+            _this.options.onStopDragging(_this);
             _this.validateAndCorrectDragPosition();
         });
         this.container.addEventListener("mousedown", function (e) {
+            hasFocus = true;
             initialX = e.pageX;
             isDragging = true;
             _this.transition(false);
         });
-        this.container.addEventListener("mousemove", function (e) {
+        document.addEventListener("mousemove", function (e) {
             if (!isDragging)
                 return false;
             deltaX = initialX - e.pageX + _this.currentPosX;
             _this.wrapper.style.right = deltaX + "px";
-            _this.options.onDragging();
+            _this.options.onDragging(_this);
         });
     };
     /**
@@ -208,10 +218,10 @@ var Lumens = /** @class */ (function () {
     Lumens.prototype.setDragPosition = function (offset, animate, changedSlide) {
         var _this = this;
         if (changedSlide) {
-            this.options.onSlideChange();
+            this.options.onSlideChange(this);
         }
         if (animate) {
-            this.options.onAnimating();
+            this.options.onAnimating(this);
             this.transition(true);
         }
         this.wrapper.style.right = offset + "px";
@@ -219,9 +229,9 @@ var Lumens = /** @class */ (function () {
             clearTimeout(this.animationTimeout);
             this.animationTimeout = setTimeout(function () {
                 _this.transition(false);
-                _this.options.onFinishAnimating();
+                _this.options.onFinishAnimating(_this);
                 if (changedSlide) {
-                    _this.options.onSlideChanged();
+                    _this.options.onSlideChanged(_this);
                     _this.loopHandler();
                 }
             }, this.options.animationSpeed);
@@ -322,8 +332,9 @@ var Lumens = /** @class */ (function () {
      */
     Lumens.prototype.gotoPage = function (page, animate) {
         if (animate === void 0) { animate = true; }
-        if (page > this.slides.length - this.options.slidesPerPage)
-            return false;
+        if (page > this.slides.length - this.options.slidesPerPage) {
+            page = this.slides.length - this.options.slidesPerPage;
+        }
         var totalOffset = 0;
         for (var i = 0; i < page; i++) {
             var slide = this.slides[i];
@@ -369,7 +380,7 @@ var Lumens = /** @class */ (function () {
         }
         var clones = this.container.querySelectorAll(".lumens__clone");
         clones.forEach(function (clone) { return clone.remove(); });
-        this.options.onDestroy();
+        this.options.onDestroy(this);
         this.setOptions({});
     };
     return Lumens;

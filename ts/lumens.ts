@@ -1,4 +1,4 @@
-declare type CallbackFunction = () => void;
+declare type CallbackFunction = (slider: Lumens) => void;
 
 interface ResponsiveObject {
   width: number;
@@ -61,7 +61,7 @@ class Lumens {
    */
   constructor(
     selector: string | Element,
-    options?: Options,
+    options: Options = {},
     logWarnings?: boolean
   ) {
     if (typeof selector === "string") {
@@ -70,6 +70,10 @@ class Lumens {
       this.container = container;
     } else if (selector instanceof HTMLElement) {
       this.container = selector;
+    }
+
+    if (!options.responsive) {
+      options.responsive = [];
     }
 
     this.logWarnings = logWarnings;
@@ -88,7 +92,7 @@ class Lumens {
 
     this.gotoPage(this.currentPage, false);
 
-    this.options.onInit();
+    this.options.onInit(this);
   }
 
   /**
@@ -158,7 +162,7 @@ class Lumens {
           this.setOptions(this.initialOptions);
         }
         this.styleSlides();
-        this.options.onChangeResponsive();
+        this.options.onChangeResponsive(this);
       }
       this.gotoPage(this.currentPage, false);
     };
@@ -258,25 +262,32 @@ class Lumens {
     let isDragging = false;
     let initialX = 0;
     let deltaX = 0;
+    let hasFocus = false;
 
     document.addEventListener("mouseup", () => {
+      if (!hasFocus) {
+        return false;
+      }
+
+      hasFocus = false;
       isDragging = false;
       this.currentPosX = deltaX;
-      this.options.onStopDragging();
+      this.options.onStopDragging(this);
       this.validateAndCorrectDragPosition();
     });
 
     this.container.addEventListener("mousedown", e => {
+      hasFocus = true;
       initialX = e.pageX;
       isDragging = true;
       this.transition(false);
     });
 
-    this.container.addEventListener("mousemove", e => {
+    document.addEventListener("mousemove", e => {
       if (!isDragging) return false;
       deltaX = initialX - e.pageX + this.currentPosX;
       this.wrapper.style.right = deltaX + "px";
-      this.options.onDragging();
+      this.options.onDragging(this);
     });
   }
 
@@ -292,11 +303,11 @@ class Lumens {
     changedSlide?: boolean
   ): void {
     if (changedSlide) {
-      this.options.onSlideChange();
+      this.options.onSlideChange(this);
     }
 
     if (animate) {
-      this.options.onAnimating();
+      this.options.onAnimating(this);
       this.transition(true);
     }
 
@@ -306,9 +317,9 @@ class Lumens {
       clearTimeout(this.animationTimeout);
       this.animationTimeout = setTimeout(() => {
         this.transition(false);
-        this.options.onFinishAnimating();
+        this.options.onFinishAnimating(this);
         if (changedSlide) {
-          this.options.onSlideChanged();
+          this.options.onSlideChanged(this);
 
           this.loopHandler();
         }
@@ -415,7 +426,9 @@ class Lumens {
    * @returns {boolean} Will return false if the given page doesn't exist
    */
   gotoPage(page: number, animate: boolean = true): boolean {
-    if (page > this.slides.length - this.options.slidesPerPage) return false;
+    if (page > this.slides.length - this.options.slidesPerPage) {
+      page = this.slides.length - this.options.slidesPerPage;
+    }
 
     let totalOffset = 0;
     for (let i = 0; i < page; i++) {
@@ -468,9 +481,9 @@ class Lumens {
     }
 
     const clones = this.container.querySelectorAll(".lumens__clone");
-    clones.forEach(clone=>clone.remove());
-    
-    this.options.onDestroy();
+    clones.forEach(clone => clone.remove());
+
+    this.options.onDestroy(this);
     this.setOptions({});
   }
 }

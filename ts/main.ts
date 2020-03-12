@@ -2,7 +2,7 @@ window.onload = () => {
   window["a"] = new Lumens("#test", {
     slidesPerPage: 3,
     freeScroll: false,
-    animationSpeed: 1000,
+    animationSpeed: 200,
     loop: true,
     onInit: () => console.log("%cSlider initialized", "color: red;"),
     onDragging: () => console.log("%cDragging", "color: green;"),
@@ -11,8 +11,8 @@ window.onload = () => {
     onFinishAnimating: () => console.log("%cAnimation finished", "color: blue;"),
     onDestroy: () => console.log("%cSlider destoyed", "color: red;"),
     onChangeResponsive: () => console.log("%cChanged breakpoint", "color: black;"),
-    onSlideChange: () => console.log("%cChanging slide", "color: orange;"),
-    onSlideChanged: () => console.log("%cChanged slide", "color: orange;"),
+    onSlideChange: slider => console.log("%cChanging slide from " + slider.currentPage, "color: orange;"),
+    onSlideChanged: slider => console.log("%cChanged slide to " + slider.currentPage, "color: orange;"),
     responsive: [
       {
         width: 1240,
