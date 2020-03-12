@@ -1,0 +1,17 @@
+.main{
+  width: 100%;
+  max-width: 124rem;
+  margin: 0 auto;
+}
+
+.article{
+
+  &--text{
+    max-width: 80rem;
+    text-align: justify;
+  }
+  
+  &:not(:last-child){
+    margin-bottom: 2rem;
+  }
+}

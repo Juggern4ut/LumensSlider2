@@ -1,8 +1,11 @@
 .nav {
   background-color: #444;
   color: #fff;
-
+  
   &__list {
+    width: 100%;
+    max-width: 124rem;
+    margin: 0 auto;
     display: flex;
   }
 
@@ -10,7 +13,7 @@
     padding: 1rem;
     display: block;
     transition: background-color 200ms ease-out;
-    &:hover{
+    &:hover {
       background-color: #666;
     }
   }
