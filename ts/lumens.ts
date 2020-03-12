@@ -467,6 +467,9 @@ class Lumens {
       this.container.append(slide);
     }
 
+    const clones = this.container.querySelectorAll(".lumens__clone");
+    clones.forEach(clone=>clone.remove());
+    
     this.options.onDestroy();
     this.setOptions({});
   }

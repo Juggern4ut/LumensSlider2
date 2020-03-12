@@ -367,6 +367,8 @@ var Lumens = /** @class */ (function () {
             this.wrapper.remove();
             this.container.append(slide);
         }
+        var clones = this.container.querySelectorAll(".lumens__clone");
+        clones.forEach(function (clone) { return clone.remove(); });
         this.options.onDestroy();
         this.setOptions({});
     };
