@@ -1,6 +1,7 @@
 .thumbnail-slider {
-  margin: 0 auto;
   width: 40rem;
+  max-width: calc(100% + 2rem);
+  margin-left: -1rem;
   &--large {
     height: 20rem;
     margin-bottom: 2rem;

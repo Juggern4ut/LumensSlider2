@@ -1,3 +1,15 @@
-.heading-primary{
+.heading-primary {
   font-size: 3rem;
+  margin: 2rem 0 1rem 0;
+  position: relative;
+
+  &::after{
+    content: ' ';
+    width: 15rem;
+    height: 1px;
+    background-color: #a7a7a7;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+  }
 }

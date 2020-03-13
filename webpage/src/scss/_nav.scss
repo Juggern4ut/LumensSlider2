@@ -1,12 +1,14 @@
 .nav {
   background-color: #444;
   color: #fff;
-  
+
   &__list {
     width: 100%;
-    max-width: 124rem;
+    max-width: 80rem;
     margin: 0 auto;
     display: flex;
+    background-color: #1e1e1e;
+    padding: 0;
   }
 
   &__item {

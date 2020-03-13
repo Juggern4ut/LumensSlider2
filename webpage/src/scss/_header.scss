@@ -16,20 +16,21 @@
     z-index: -1;
   }
 
-  &__slider{
+  &__slider {
     width: 500px;
+    max-width: 100%;
     margin: 0 auto;
   }
 
-  &__slide-title{
-    font-size: 5rem;
+  &__slide-title {
+    font-size: 4rem;
   }
 
   &__title {
     font-size: 6rem;
   }
-  
-  &__title-span{
+
+  &__title-span {
     margin-top: 2rem;
     font-size: 3rem;
     display: block;

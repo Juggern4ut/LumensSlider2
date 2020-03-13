@@ -1,21 +1,28 @@
-.main{
-  width: 100%;
-  max-width: 124rem;
+.main {
+  width: calc(100% - 4rem);
+  max-width: 80rem;
   margin: 0 auto;
+  padding: 2rem 0;
 }
 
-.article{
+.article {
+  text-align: justify;
+  line-height: 1.6;
 
-  &--text{
-    max-width: 80rem;
-    text-align: justify;
-  }
-  
-  &:not(:last-child){
+  &:not(:last-child) {
     margin-bottom: 2rem;
   }
 
-  &__title{
-    font-size: 2.4rem
+  &__title {
+    font-size: 2.4rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  p {
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
   }
 }

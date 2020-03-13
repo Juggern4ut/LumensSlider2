@@ -1,16 +1,24 @@
-html{
+html {
   font-size: 62.5%;
+  background-color: #fefefe;
 }
 
-body{
+body {
   font-size: 1.6rem;
+  color: #454545;
+  font-family: 'Open Sans', 'Arial';
 }
 
-*{
+* {
   font-size: inherit;
   font-weight: normal;
   margin: 0;
   padding: 0;
   box-sizing: inherit;
   color: inherit;
+  line-height: inherit;
+}
+
+ul {
+  padding-left: 2rem;
 }
