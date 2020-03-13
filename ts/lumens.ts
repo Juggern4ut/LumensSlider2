@@ -28,6 +28,8 @@ interface Options {
   preventTouchDrag?: boolean;
   /** The amount of pixels that have to be dragged to change the slide */
   dragThreshold?: number;
+  /** If set to true, the responsive options that are not set will be inherited by the initial options, otherwise unset options will use the default */
+  inheritOptions?: boolean;
   /** Callback that is called whenever the user drags the slideshow */
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -60,6 +62,7 @@ class Lumens {
   autoplayInterval: number;
   animationTimeout: number;
   wasDragged: boolean = false;
+  inheritOptions: boolean = true;
 
   /**
    * Will setup the DOM and EventListeners
@@ -85,11 +88,14 @@ class Lumens {
       options.responsive = [];
     }
 
+    if (options.inheritOptions === false || options.inheritOptions === true) {
+      this.inheritOptions = options.inheritOptions;
+    }
+
     this.logWarnings = logWarnings;
     this.initialOptions = options;
 
     this.setOptions(options);
-
     this.createWrapper();
     this.styleSlides();
     this.addDragListeners();
@@ -99,7 +105,10 @@ class Lumens {
       this.createCloneNodes();
     }
 
-    this.gotoPage(this.currentPage, false);
+    if (this.currentPage !== 0) {
+      this.gotoPage(this.currentPage, false);
+    }
+
     this.options.onInit(this);
     this.startAutoplayInterval();
   }
@@ -112,14 +121,16 @@ class Lumens {
    * @param options The custom options to pass
    * @returns {void}
    */
-  setOptions(options: Options) {
+  setOptions(options: Options, inherit?: boolean) {
     this.options = {};
+
     let defaultOptions: Options = {
       slidesPerPage: 1,
       preventSelection: true,
       freeScroll: false,
       animationSpeed: 200,
       responsive: [],
+      inheritOptions: true,
       loop: false,
       startingPage: 0,
       autoplay: false,
@@ -138,14 +149,25 @@ class Lumens {
     };
 
     Object.keys(defaultOptions).forEach(key => {
+      if (key === "responsive" || key === "inheritOptions") return false;
+
       if (options[key] !== undefined && options[key] !== null) {
         this.options[key] = options[key];
-      } else if (key !== "responsive") {
-        this.options[key] = defaultOptions[key];
+      } else {
+        if (this.inheritOptions) {
+          if (
+            this.initialOptions[key] !== undefined &&
+            this.initialOptions[key] !== null
+          ) {
+            this.options[key] = this.initialOptions[key];
+          } else {
+            this.options[key] = defaultOptions[key];
+          }
+        } else {
+          this.options[key] = defaultOptions[key];
+        }
       }
     });
-
-    this.currentPage = this.options.startingPage;
   }
 
   /**
@@ -363,13 +385,15 @@ class Lumens {
       if (
         dragDelta > this.options.dragThreshold &&
         dragDelta < this.getSlideWidth(currentSlide) / 2 &&
-        this.currentPage < this.slides.length - this.options.slidesPerPage
+        this.currentPage < this.slides.length - this.options.slidesPerPage &&
+        this.options.freeScroll === false
       ) {
         this.gotoPage(this.currentPage + 1);
       } else if (
         dragDelta < this.options.dragThreshold * -1 &&
         dragDelta > (this.getSlideWidth(currentSlide) / 2) * -1 &&
-        this.currentPage > 0
+        this.currentPage > 0 &&
+        this.options.freeScroll === false
       ) {
         this.gotoPage(this.currentPage - 1);
       } else {

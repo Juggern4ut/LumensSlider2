@@ -11,6 +11,7 @@ var Lumens = /** @class */ (function () {
         this.currentPosX = 0;
         this.currentPage = 0;
         this.wasDragged = false;
+        this.inheritOptions = true;
         if (typeof selector === "string") {
             var container = document.querySelector(selector);
             if (!container)
@@ -23,6 +24,9 @@ var Lumens = /** @class */ (function () {
         if (!options.responsive) {
             options.responsive = [];
         }
+        if (options.inheritOptions === false || options.inheritOptions === true) {
+            this.inheritOptions = options.inheritOptions;
+        }
         this.logWarnings = logWarnings;
         this.initialOptions = options;
         this.setOptions(options);
@@ -33,7 +37,9 @@ var Lumens = /** @class */ (function () {
         if (this.options.loop) {
             this.createCloneNodes();
         }
-        this.gotoPage(this.currentPage, false);
+        if (this.currentPage !== 0) {
+            this.gotoPage(this.currentPage, false);
+        }
         this.options.onInit(this);
         this.startAutoplayInterval();
     }
@@ -45,7 +51,7 @@ var Lumens = /** @class */ (function () {
      * @param options The custom options to pass
      * @returns {void}
      */
-    Lumens.prototype.setOptions = function (options) {
+    Lumens.prototype.setOptions = function (options, inherit) {
         var _this = this;
         this.options = {};
         var defaultOptions = {
@@ -54,6 +60,7 @@ var Lumens = /** @class */ (function () {
             freeScroll: false,
             animationSpeed: 200,
             responsive: [],
+            inheritOptions: true,
             loop: false,
             startingPage: 0,
             autoplay: false,
@@ -71,14 +78,26 @@ var Lumens = /** @class */ (function () {
             onSlideChanged: function () { }
         };
         Object.keys(defaultOptions).forEach(function (key) {
+            if (key === "responsive" || key === "inheritOptions")
+                return false;
             if (options[key] !== undefined && options[key] !== null) {
                 _this.options[key] = options[key];
             }
-            else if (key !== "responsive") {
-                _this.options[key] = defaultOptions[key];
+            else {
+                if (_this.inheritOptions) {
+                    if (_this.initialOptions[key] !== undefined &&
+                        _this.initialOptions[key] !== null) {
+                        _this.options[key] = _this.initialOptions[key];
+                    }
+                    else {
+                        _this.options[key] = defaultOptions[key];
+                    }
+                }
+                else {
+                    _this.options[key] = defaultOptions[key];
+                }
             }
         });
-        this.currentPage = this.options.startingPage;
     };
     /**
      * Will start the autoplay interval
@@ -270,12 +289,14 @@ var Lumens = /** @class */ (function () {
             var currentSlide = _this.slides[_this.currentPage];
             if (dragDelta > _this.options.dragThreshold &&
                 dragDelta < _this.getSlideWidth(currentSlide) / 2 &&
-                _this.currentPage < _this.slides.length - _this.options.slidesPerPage) {
+                _this.currentPage < _this.slides.length - _this.options.slidesPerPage &&
+                _this.options.freeScroll === false) {
                 _this.gotoPage(_this.currentPage + 1);
             }
             else if (dragDelta < _this.options.dragThreshold * -1 &&
                 dragDelta > (_this.getSlideWidth(currentSlide) / 2) * -1 &&
-                _this.currentPage > 0) {
+                _this.currentPage > 0 &&
+                _this.options.freeScroll === false) {
                 _this.gotoPage(_this.currentPage - 1);
             }
             else {
