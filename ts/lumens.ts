@@ -227,6 +227,7 @@ class Lumens {
     this.container.style.overflow = "hidden";
 
     this.wrapper.style.whiteSpace = "nowrap";
+    this.wrapper.style.height = "100%";
     this.wrapper.style.position = "relative";
     this.wrapper.style.right = "0";
 
