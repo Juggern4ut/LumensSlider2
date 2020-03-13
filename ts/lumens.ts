@@ -55,6 +55,7 @@ class Lumens {
   logWarnings: boolean;
   autoplayInterval: number;
   animationTimeout: number;
+  wasDragged: boolean = false;
 
   /**
    * Will setup the DOM and EventListeners
@@ -309,6 +310,7 @@ class Lumens {
 
       this.stopAutoplayInterval();
       hasFocus = true;
+      this.wasDragged = false;
 
       if (e.type === "touchstart") {
         initialX = e.targetTouches[0].pageX;
@@ -330,6 +332,7 @@ class Lumens {
       }
 
       hasDragged = true;
+      this.wasDragged = true;
       this.wrapper.style.right = deltaX + "px";
       this.options.onDragging(this);
     };

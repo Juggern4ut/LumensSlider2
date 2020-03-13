@@ -51,7 +51,7 @@ var initThumbnailSlider = function () {
     var _loop_1 = function (i) {
         var slide = small.slides[i];
         slide.addEventListener("click", function (e) {
-            if (!small.isDragging) {
+            if (!small.wasDragged) {
                 large.gotoPage(i, true);
             }
         });

@@ -10,6 +10,7 @@ var Lumens = /** @class */ (function () {
         if (options === void 0) { options = {}; }
         this.currentPosX = 0;
         this.currentPage = 0;
+        this.wasDragged = false;
         if (typeof selector === "string") {
             var container = document.querySelector(selector);
             if (!container)
@@ -226,6 +227,7 @@ var Lumens = /** @class */ (function () {
                 return false;
             _this.stopAutoplayInterval();
             hasFocus = true;
+            _this.wasDragged = false;
             if (e.type === "touchstart") {
                 initialX = e.targetTouches[0].pageX;
             }
@@ -245,6 +247,7 @@ var Lumens = /** @class */ (function () {
                 deltaX = initialX - e.pageX + _this.currentPosX;
             }
             hasDragged = true;
+            _this.wasDragged = true;
             _this.wrapper.style.right = deltaX + "px";
             _this.options.onDragging(_this);
         };

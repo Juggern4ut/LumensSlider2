@@ -46,12 +46,14 @@ const initThumbnailSlider = () => {
       for (let i = 0; i < small.slides.length; i++) {
         small.slides[i].classList.remove("thumbnail-slider__slide--active");
       }
-      small.slides[slider.currentPage].classList.add("thumbnail-slider__slide--active");
+      small.slides[slider.currentPage].classList.add(
+        "thumbnail-slider__slide--active"
+      );
     }
   });
 
   window["small"] = new Lumens("#thumbnail-slider--small", {
-    slidesPerPage: 3  
+    slidesPerPage: 3
   });
 
   const small = window["small"];
@@ -59,7 +61,7 @@ const initThumbnailSlider = () => {
   for (let i = 0; i < small.slides.length; i++) {
     const slide = small.slides[i];
     slide.addEventListener("click", e => {
-      if(!small.isDragging){
+      if (!small.wasDragged) {
         large.gotoPage(i, true);
       }
     });
