@@ -1,0 +1,58 @@
+include ../components/article.pug
+
+doctype html  
+html(lang='en')  
+  include ../components/head.pug
+  body
+    include ../components/header.pug
+    include ../components/navigation.pug
+    main
+      +article("What is Lumens?")
+        p 
+          | Lumens is a lightweight JavaScript class for creating Slideshows in
+          | your webpage. The main focus points of Lumens are speed, compatibility
+          | and configuratibility.
+
+        p
+          | It is completely written in TypeScript and commented thorouhly so if
+          | you want to change the behaviour even further than all the options
+          | already allow, you'll be there in no time.
+
+        p
+          | When using other Slideshow classes, I often ran into problems with the
+          | given styling and having to overwrite the CSS that was bundled with
+          | the slider. Because of this, I made sure that Lumens only uses the
+          | bare minimum of inline styles and does affect the dom as little as
+          | possible. An additional CSS-File is NOT required. Just import the
+          | JavaScript file and you're golden.
+
+      +article("Who should use Lumens?")
+        p
+          | Instead of telling you that this is the best thing since sliced bread,
+          | I'm gonna be frank with you and tell you who Lumens is for and who
+          | probably should better look for an alternative.
+
+        p
+          | If you are a developer or just have a basic understanding of
+          | JavaScript and Webdevelopment and want to be able to integrate the
+          | slideshow as borderless as possible into your webapp Lumens might be
+          | just the thing for you. Just remember to consider the following few
+          | points:
+
+        ul
+          li
+            | Lumens ships with NO styling, so all the (S)CSS has to be written by
+            | you
+          li
+            | Lumens does NOT provide you with fancy functions like pagination,
+            | thumbnails or amazing animations but delivers the functions to build
+            | them your own
+
+      +article("Who should NOT use Lumens?")
+        p
+          | If the following sentence sounds something like you, you might want to
+          | look for an more automated alternative:
+        p
+          | "I have no knowledge in programming or webdevelopment, my nephew made
+          | my webpage with Wordpress and I only know how to change the text in
+          | there once in a while"
