@@ -56,6 +56,7 @@ var Lumens = /** @class */ (function () {
             loop: false,
             startingPage: 0,
             autoplay: false,
+            draggable: true,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -155,6 +156,7 @@ var Lumens = /** @class */ (function () {
         this.container.appendChild(this.wrapper);
         this.container.style.overflow = "hidden";
         this.wrapper.style.whiteSpace = "nowrap";
+        this.wrapper.style.height = "100%";
         this.wrapper.style.position = "relative";
         this.wrapper.style.right = "0";
         this.slides = this.wrapper.children;
@@ -218,7 +220,10 @@ var Lumens = /** @class */ (function () {
         var initialX = 0;
         var deltaX = 0;
         var hasFocus = false;
+        var hasDragged = false;
         var startDragFunction = function (e) {
+            if (!_this.options.draggable)
+                return false;
             _this.stopAutoplayInterval();
             hasFocus = true;
             if (e.type === "touchstart") {
@@ -231,7 +236,7 @@ var Lumens = /** @class */ (function () {
             _this.transition(false);
         };
         var moveDragFunction = function (e) {
-            if (!isDragging)
+            if (!isDragging || !_this.options.draggable)
                 return false;
             if (e.type === "touchmove") {
                 deltaX = initialX - e.targetTouches[0].pageX + _this.currentPosX;
@@ -239,17 +244,18 @@ var Lumens = /** @class */ (function () {
             else {
                 deltaX = initialX - e.pageX + _this.currentPosX;
             }
+            hasDragged = true;
             _this.wrapper.style.right = deltaX + "px";
             _this.options.onDragging(_this);
         };
         var releaseDragFunction = function (e) {
-            if (!hasFocus) {
+            if (!hasFocus || !_this.options.draggable)
                 return false;
-            }
             hasFocus = false;
             isDragging = false;
             _this.startAutoplayInterval();
-            _this.currentPosX = deltaX;
+            _this.currentPosX = hasDragged ? deltaX : _this.currentPosX;
+            hasDragged = false;
             _this.options.onStopDragging(_this);
             _this.validateAndCorrectDragPosition();
         };

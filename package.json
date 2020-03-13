@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "tsc",
-    "startup": "live-server",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "startup": "live-server"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,6 @@
     "gulp-imagemin": "^7.1.0",
     "gulp-postcss": "^8.0.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
-    "gulp-pug": "^4.0.1"
+    "gulp-sourcemaps": "^2.6.5"
   }
 }

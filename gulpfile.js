@@ -1,9 +1,6 @@
 /* Base Module */
 const gulp = require("gulp");
 
-/* Convert PUG to HTML */
-const pug = require("gulp-pug");
-
 /* Changed - Only minify images that changed */
 const changed = require("gulp-changed");
 
@@ -46,13 +43,6 @@ function css() {
     .pipe(gulp.dest("./webpage/dist/css"));
 }
 
-function html() {
-  return gulp
-    .src("./webpage/src/templates/pages/**/*.pug")
-    .pipe(pug())
-    .pipe(gulp.dest("./webpage/dist/html"));
-}
-
 /**
  * 1. Set a source and destination path
  * 2. Optimize the images
@@ -74,12 +64,11 @@ function optimizeImages() {
 function watch() {
   gulp.watch("webpage/src/img/**/*.+(png|jpg|gif)", optimizeImages);
   gulp.watch("webpage/src/scss/**/*.scss", css);
-  gulp.watch("webpage/src/templates/**/*.pug", html);
 }
 
 /**
  * This export will start the process of watching the
  * files and running the coresponding function
  */
-const build = gulp.series(gulp.parallel(css, optimizeImages, html), watch);
+const build = gulp.series(gulp.parallel(css, optimizeImages), watch);
 exports.default = build;

@@ -1,0 +1,30 @@
+.thumbnail-slider {
+  width: 40rem;
+  &--large {
+    height: 20rem;
+    margin-bottom: 2rem;
+  }
+
+  &--small {
+    height: 10rem;
+  }
+
+  &--small &__slide{
+    opacity: 0.7;
+    &--active{
+      opacity: 1;
+    }
+  }
+
+  &__slide {
+    height: 100%;
+    margin: 0 1rem;
+  }
+
+  &__content {
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+}
