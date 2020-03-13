@@ -8,7 +8,7 @@ window.onload = function () {
 var initHeaderSlider = function () {
     new Lumens(".header__slider", {
         loop: true,
-        autoplay: false
+        autoplay: 1000
     });
 };
 var initDefaultSlider = function () {

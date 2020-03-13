@@ -9,7 +9,7 @@ window.onload = () => {
 const initHeaderSlider = () => {
   new Lumens(".header__slider", {
     loop: true,
-    autoplay: false
+    autoplay: 1000
   });
 };
 

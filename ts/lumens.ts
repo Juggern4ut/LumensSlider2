@@ -24,6 +24,8 @@ interface Options {
   autoplay?: number | false;
   /** If set to false, the slideshow will not be draggable with mouse- or touch-events */
   draggable?: boolean;
+  /** If set to true touch devices can not scroll left/right or up/down when touching the slider*/
+  preventTouchDrag?: boolean;
   /** Callback that is called whenever the user drags the slideshow */
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -120,6 +122,7 @@ class Lumens {
       startingPage: 0,
       autoplay: false,
       draggable: true,
+      preventTouchDrag: true,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -326,6 +329,9 @@ class Lumens {
       if (!isDragging || !this.options.draggable) return false;
 
       if (e.type === "touchmove") {
+        if (this.options.preventTouchDrag) {
+          e.preventDefault();
+        }
         deltaX = initialX - e.targetTouches[0].pageX + this.currentPosX;
       } else {
         deltaX = initialX - e.pageX + this.currentPosX;
@@ -353,7 +359,9 @@ class Lumens {
     document.addEventListener("touchend", releaseDragFunction);
 
     document.addEventListener("mousemove", moveDragFunction);
-    document.addEventListener("touchmove", moveDragFunction);
+    document.addEventListener("touchmove", moveDragFunction, {
+      passive: false
+    });
 
     this.container.addEventListener("mousedown", startDragFunction);
     this.container.addEventListener("touchstart", startDragFunction);

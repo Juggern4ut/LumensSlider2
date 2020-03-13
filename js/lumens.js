@@ -58,6 +58,7 @@ var Lumens = /** @class */ (function () {
             startingPage: 0,
             autoplay: false,
             draggable: true,
+            preventTouchDrag: true,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -241,6 +242,9 @@ var Lumens = /** @class */ (function () {
             if (!isDragging || !_this.options.draggable)
                 return false;
             if (e.type === "touchmove") {
+                if (_this.options.preventTouchDrag) {
+                    e.preventDefault();
+                }
                 deltaX = initialX - e.targetTouches[0].pageX + _this.currentPosX;
             }
             else {
@@ -265,7 +269,9 @@ var Lumens = /** @class */ (function () {
         document.addEventListener("mouseup", releaseDragFunction);
         document.addEventListener("touchend", releaseDragFunction);
         document.addEventListener("mousemove", moveDragFunction);
-        document.addEventListener("touchmove", moveDragFunction);
+        document.addEventListener("touchmove", moveDragFunction, {
+            passive: false
+        });
         this.container.addEventListener("mousedown", startDragFunction);
         this.container.addEventListener("touchstart", startDragFunction);
     };
