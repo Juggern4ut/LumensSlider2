@@ -22,7 +22,9 @@ interface Options {
   startingPage?: number;
   /** Amount of milliseconds until the slideshow goes to the next slide automatically */
   autoplay?: number | false;
-  /** Callback that is called whenever the user drags the slideshow*/
+  /** If set to false, the slideshow will not be draggable with mouse- or touch-events */
+  draggable?: boolean;
+  /** Callback that is called whenever the user drags the slideshow */
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
   onStopDragging?: CallbackFunction;
@@ -116,6 +118,7 @@ class Lumens {
       loop: false,
       startingPage: 0,
       autoplay: false,
+      draggable: true,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -300,6 +303,8 @@ class Lumens {
     let hasFocus = false;
 
     const startDragFunction = e => {
+      if (!this.options.draggable) return false;
+
       this.stopAutoplayInterval();
       hasFocus = true;
 
@@ -314,7 +319,7 @@ class Lumens {
     };
 
     const moveDragFunction = e => {
-      if (!isDragging) return false;
+      if (!isDragging || !this.options.draggable) return false;
 
       if (e.type === "touchmove") {
         deltaX = initialX - e.targetTouches[0].pageX + this.currentPosX;
@@ -327,9 +332,7 @@ class Lumens {
     };
 
     const releaseDragFunction = e => {
-      if (!hasFocus) {
-        return false;
-      }
+      if (!hasFocus || !this.options.draggable) return false;
 
       hasFocus = false;
       isDragging = false;
