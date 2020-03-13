@@ -302,6 +302,7 @@ class Lumens {
     let initialX = 0;
     let deltaX = 0;
     let hasFocus = false;
+    let hasDragged = false;
 
     const startDragFunction = e => {
       if (!this.options.draggable) return false;
@@ -328,6 +329,7 @@ class Lumens {
         deltaX = initialX - e.pageX + this.currentPosX;
       }
 
+      hasDragged = true;
       this.wrapper.style.right = deltaX + "px";
       this.options.onDragging(this);
     };
@@ -338,7 +340,8 @@ class Lumens {
       hasFocus = false;
       isDragging = false;
       this.startAutoplayInterval();
-      this.currentPosX = deltaX;
+      this.currentPosX = hasDragged ? deltaX : this.currentPosX;
+      hasDragged = false;
       this.options.onStopDragging(this);
       this.validateAndCorrectDragPosition();
     };
