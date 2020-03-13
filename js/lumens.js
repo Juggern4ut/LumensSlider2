@@ -72,10 +72,10 @@ var Lumens = /** @class */ (function () {
             onStopDragging: function () { },
             onAnimating: function () { },
             onFinishAnimating: function () { },
-            onDestroy: function () { },
             onChangeResponsive: function () { },
             onSlideChange: function () { },
-            onSlideChanged: function () { }
+            onSlideChanged: function () { },
+            onDestroy: function () { }
         };
         Object.keys(defaultOptions).forEach(function (key) {
             if (key === "responsive" || key === "inheritOptions")

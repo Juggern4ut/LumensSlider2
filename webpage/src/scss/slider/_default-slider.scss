@@ -1,7 +1,8 @@
 .default-slider {
+  margin: 2rem auto;
   width: 40rem;
   &__slide {
     padding: 2rem;
-    border: 1px solid red;
+    border: 1px solid #888;
   }
 }

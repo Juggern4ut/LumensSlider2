@@ -142,10 +142,10 @@ class Lumens {
       onStopDragging: () => {},
       onAnimating: () => {},
       onFinishAnimating: () => {},
-      onDestroy: () => {},
       onChangeResponsive: () => {},
       onSlideChange: () => {},
-      onSlideChanged: () => {}
+      onSlideChanged: () => {},
+      onDestroy: () => {}
     };
 
     Object.keys(defaultOptions).forEach(key => {
