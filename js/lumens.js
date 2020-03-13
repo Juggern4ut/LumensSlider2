@@ -59,6 +59,7 @@ var Lumens = /** @class */ (function () {
             autoplay: false,
             draggable: true,
             preventTouchDrag: true,
+            dragThreshold: 50,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -223,6 +224,7 @@ var Lumens = /** @class */ (function () {
         var deltaX = 0;
         var hasFocus = false;
         var hasDragged = false;
+        var dragDelta;
         var startDragFunction = function (e) {
             if (!_this.options.draggable)
                 return false;
@@ -245,13 +247,14 @@ var Lumens = /** @class */ (function () {
                 if (_this.options.preventTouchDrag) {
                     e.preventDefault();
                 }
-                deltaX = initialX - e.targetTouches[0].pageX + _this.currentPosX;
+                dragDelta = initialX - e.targetTouches[0].pageX;
             }
             else {
-                deltaX = initialX - e.pageX + _this.currentPosX;
+                dragDelta = initialX - e.pageX;
             }
+            deltaX = dragDelta + _this.currentPosX;
             hasDragged = true;
-            _this.wasDragged = true;
+            _this.wasDragged = Math.abs(dragDelta) > _this.options.dragThreshold;
             _this.wrapper.style.right = deltaX + "px";
             _this.options.onDragging(_this);
         };
@@ -264,7 +267,20 @@ var Lumens = /** @class */ (function () {
             _this.currentPosX = hasDragged ? deltaX : _this.currentPosX;
             hasDragged = false;
             _this.options.onStopDragging(_this);
-            _this.validateAndCorrectDragPosition();
+            var currentSlide = _this.slides[_this.currentPage];
+            if (dragDelta > _this.options.dragThreshold &&
+                dragDelta < _this.getSlideWidth(currentSlide) / 2 &&
+                _this.currentPage < _this.slides.length - _this.options.slidesPerPage) {
+                _this.gotoPage(_this.currentPage + 1);
+            }
+            else if (dragDelta < _this.options.dragThreshold * -1 &&
+                dragDelta > (_this.getSlideWidth(currentSlide) / 2) * -1 &&
+                _this.currentPage > 0) {
+                _this.gotoPage(_this.currentPage - 1);
+            }
+            else {
+                _this.validateAndCorrectDragPosition();
+            }
         };
         document.addEventListener("mouseup", releaseDragFunction);
         document.addEventListener("touchend", releaseDragFunction);

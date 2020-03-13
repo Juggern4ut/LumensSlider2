@@ -24,8 +24,10 @@ interface Options {
   autoplay?: number | false;
   /** If set to false, the slideshow will not be draggable with mouse- or touch-events */
   draggable?: boolean;
-  /** If set to true touch devices can not scroll left/right or up/down when touching the slider*/
+  /** If set to true touch devices can not scroll left/right or up/down when touching the slider */
   preventTouchDrag?: boolean;
+  /** The amount of pixels that have to be dragged to change the slide */
+  dragThreshold?: number;
   /** Callback that is called whenever the user drags the slideshow */
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -123,6 +125,7 @@ class Lumens {
       autoplay: false,
       draggable: true,
       preventTouchDrag: true,
+      dragThreshold: 50,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -307,6 +310,7 @@ class Lumens {
     let deltaX = 0;
     let hasFocus = false;
     let hasDragged = false;
+    let dragDelta;
 
     const startDragFunction = e => {
       if (!this.options.draggable) return false;
@@ -332,13 +336,14 @@ class Lumens {
         if (this.options.preventTouchDrag) {
           e.preventDefault();
         }
-        deltaX = initialX - e.targetTouches[0].pageX + this.currentPosX;
+        dragDelta = initialX - e.targetTouches[0].pageX;
       } else {
-        deltaX = initialX - e.pageX + this.currentPosX;
+        dragDelta = initialX - e.pageX;
       }
+      deltaX = dragDelta + this.currentPosX;
 
       hasDragged = true;
-      this.wasDragged = true;
+      this.wasDragged = Math.abs(dragDelta) > this.options.dragThreshold;
       this.wrapper.style.right = deltaX + "px";
       this.options.onDragging(this);
     };
@@ -352,7 +357,24 @@ class Lumens {
       this.currentPosX = hasDragged ? deltaX : this.currentPosX;
       hasDragged = false;
       this.options.onStopDragging(this);
-      this.validateAndCorrectDragPosition();
+
+      let currentSlide = this.slides[this.currentPage] as HTMLElement;
+
+      if (
+        dragDelta > this.options.dragThreshold &&
+        dragDelta < this.getSlideWidth(currentSlide) / 2 &&
+        this.currentPage < this.slides.length - this.options.slidesPerPage
+      ) {
+        this.gotoPage(this.currentPage + 1);
+      } else if (
+        dragDelta < this.options.dragThreshold * -1 &&
+        dragDelta > (this.getSlideWidth(currentSlide) / 2) * -1 &&
+        this.currentPage > 0
+      ) {
+        this.gotoPage(this.currentPage - 1);
+      } else {
+        this.validateAndCorrectDragPosition();
+      }
     };
 
     document.addEventListener("mouseup", releaseDragFunction);
