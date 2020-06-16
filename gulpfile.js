@@ -50,7 +50,7 @@ function css() {
  */
 function optimizeImages() {
   return gulp
-    .src(["./webpage/src/img/**/*.+(png|jpg|gif)"], {
+    .src(["./webpage/src/img/**/*.+(png|jpg|gif|svg)"], {
       base: "./webpage/src/img/"
     })
     .pipe(changed("./webpage/dist/img"))
@@ -62,7 +62,7 @@ function optimizeImages() {
  * 1. Setup watchers
  */
 function watch() {
-  gulp.watch("webpage/src/img/**/*.+(png|jpg|gif)", optimizeImages);
+  gulp.watch("webpage/src/img/**/*.+(png|jpg|gif|svg)", optimizeImages);
   gulp.watch("webpage/src/scss/**/*.scss", css);
 }
 
