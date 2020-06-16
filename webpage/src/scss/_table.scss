@@ -1,0 +1,17 @@
+.table{
+  width: 100%;
+  border-collapse: collapse;
+
+  &__tr{
+
+  }
+
+  &__td{
+    border: 1px solid #dedede;
+    vertical-align: top;
+    font-family: 'consolas';
+    padding: 2px 5px;
+    text-align: left;
+    line-height: 2rem;
+  }
+}

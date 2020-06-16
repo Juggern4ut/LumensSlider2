@@ -19,7 +19,7 @@ const initDefaultSlider = () => {
 };
 
 const initResponsioveSlider = () => {
-  new Lumens("#responsive-slider", {
+  window["responsive"] = new Lumens("#responsive-slider", {
     slidesPerPage: 2,
     responsive: [
       {
@@ -33,7 +33,7 @@ const initResponsioveSlider = () => {
 };
 
 const initLoopSlider = () => {
-  new Lumens("#loop-slider", {
+  window["loop"] = new Lumens("#loop-slider", {
     loop: true
   });
 };

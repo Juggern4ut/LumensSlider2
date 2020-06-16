@@ -16,7 +16,7 @@ var initDefaultSlider = function () {
     new Lumens("#default-slider");
 };
 var initResponsioveSlider = function () {
-    new Lumens("#responsive-slider", {
+    window["responsive"] = new Lumens("#responsive-slider", {
         slidesPerPage: 2,
         responsive: [
             {
@@ -29,7 +29,7 @@ var initResponsioveSlider = function () {
     });
 };
 var initLoopSlider = function () {
-    new Lumens("#loop-slider", {
+    window["loop"] = new Lumens("#loop-slider", {
         loop: true
     });
 };
