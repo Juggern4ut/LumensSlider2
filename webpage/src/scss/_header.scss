@@ -13,7 +13,12 @@
     background-position: center;
     background-size: cover;
     background-image: url("../img/header.jpg");
-    z-index: -1;
+    z-index: 0;
+  }
+
+  &__bulb{
+    width: 10rem;
+    position: relative;
   }
 
   &__slider {
@@ -28,6 +33,7 @@
 
   &__title {
     font-size: 6rem;
+    position: relative;
   }
 
   &__title-span {
@@ -35,5 +41,6 @@
     font-size: 3rem;
     display: block;
     text-shadow: 1px 1px 0 #000;
+    position: relative;
   }
 }

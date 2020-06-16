@@ -1,9 +1,9 @@
 .loop-slider {
   margin-left: -1rem;
-  width: 40rem;
-  max-width: calc(100% + 2rem);
+  width: calc(100% + 2rem);
   
   &__slide {
+    text-align: center;
     padding: 2rem;
     border: 1px solid #888;;
     margin: 1rem;

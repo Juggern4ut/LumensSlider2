@@ -2,7 +2,18 @@
   width: calc(100% - 4rem);
   max-width: 80rem;
   margin: 0 auto;
-  padding: 2rem 0;
+  padding-bottom: 2rem;
+}
+
+.main-section {
+  background-color: #fff;
+  margin: 2rem 0;
+  padding: 2rem;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
 .article {

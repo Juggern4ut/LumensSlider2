@@ -1,15 +1,16 @@
 .heading-primary {
-  font-size: 3rem;
-  margin: 2rem 0 1rem 0;
+  font-size: 4rem;
+  margin: 0 0 3rem 0;
   position: relative;
+  font-weight: lighter;
 
   &::after{
     content: ' ';
-    width: 15rem;
+    width: 30rem;
     height: 1px;
-    background-color: #a7a7a7;
+    background-color: #454545;
     position: absolute;
-    bottom: -5px;
+    bottom: -10px;
     left: 0;
   }
 }
