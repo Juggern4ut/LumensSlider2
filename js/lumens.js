@@ -67,6 +67,7 @@ var Lumens = /** @class */ (function () {
             draggable: true,
             preventTouchDrag: true,
             dragThreshold: 50,
+            arrowKeys: false,
             onInit: function () { },
             onDragging: function () { },
             onStopDragging: function () { },
@@ -427,6 +428,21 @@ var Lumens = /** @class */ (function () {
         return index;
     };
     /**
+     * Will return the exact calculated amount
+     * of pixels a given slide takes on the screen
+     * this includes the margin aswell
+     * @param el The slide to calculate
+     * @returns {number} The calculated width
+     */
+    Lumens.prototype.getSlideWidth = function (el) {
+        var width = 0;
+        var computed = window.getComputedStyle(el, null);
+        width += parseFloat(computed.getPropertyValue("width"));
+        width += parseFloat(computed.getPropertyValue("margin-right"));
+        width += parseFloat(computed.getPropertyValue("margin-left"));
+        return width;
+    };
+    /**
      * Will calculate the offset ot the
      * given page and scroll to it
      * @param page The page to go to (starting at 0)
@@ -450,19 +466,46 @@ var Lumens = /** @class */ (function () {
         return true;
     };
     /**
-     * Will return the exact calculated amount
-     * of pixels a given slide takes on the screen
-     * this includes the margin aswell
-     * @param el The slide to calculate
-     * @returns {number} The calculated width
+     * Will advance the slideshow to the next slide.
+     * If the last slide is reached, the slideshow will
+     * either stop or go back to the beginning, based
+     * on the given parameter
+     * Alias: next
+     * @param loopAround If set to true, the slideshow
+     * will jump to the first slide if the last slide is surpassed
+     * (Will not work if infinite loop is enabled)
+     * @returns {number} The now active slide
      */
-    Lumens.prototype.getSlideWidth = function (el) {
-        var width = 0;
-        var computed = window.getComputedStyle(el, null);
-        width += parseFloat(computed.getPropertyValue("width"));
-        width += parseFloat(computed.getPropertyValue("margin-right"));
-        width += parseFloat(computed.getPropertyValue("margin-left"));
-        return width;
+    Lumens.prototype.gotoNext = function (loopAround) {
+        if (loopAround === void 0) { loopAround = false; }
+        if (this.currentPage < this.slides.length - 1) {
+            this.gotoPage(this.currentPage + 1);
+        }
+        else if (loopAround) {
+            this.gotoPage(0);
+        }
+        return this.currentPage;
+    };
+    /**
+     * Will revert the slideshow to the previous slide.
+     * If the first slide is reached, the slideshow will
+     * either stop or go to the final slide, based
+     * on the given parameter.
+     * Alias: previous, prev
+     * @param loopAround If set to true, the slideshow
+     * will jump to the last slide if the first slide is surpassed
+     * (Will not work if infinite loop is enabled)
+     * @returns {number} The now active slide
+     */
+    Lumens.prototype.gotoPrev = function (loopAround) {
+        if (loopAround === void 0) { loopAround = false; }
+        if (this.currentPage > 0) {
+            this.gotoPage(this.currentPage - 1);
+        }
+        else if (loopAround) {
+            this.gotoPage(this.slides.length - 1);
+        }
+        return this.currentPage;
     };
     /**
      * Will remove all styling and the wrapper to
@@ -488,3 +531,8 @@ var Lumens = /** @class */ (function () {
     };
     return Lumens;
 }());
+Lumens.prototype.next = Lumens.prototype.gotoNext;
+Lumens.prototype.prev = Lumens.prototype.gotoPrev;
+Lumens.prototype.previous = Lumens.prototype.gotoPrev;
+Lumens.prototype.goto = Lumens.prototype.gotoPage;
+Lumens.prototype.kill = Lumens.prototype.destroy;

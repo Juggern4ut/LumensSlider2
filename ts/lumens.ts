@@ -30,6 +30,8 @@ interface Options {
   dragThreshold?: number;
   /** If set to true, the responsive options that are not set will be inherited by the initial options, otherwise unset options will use the default */
   inheritOptions?: boolean;
+  /** If set to true, the slider can be controlled using the left and right arrow key */
+  arrowKeys?: boolean;
   /** Callback that is called whenever the user drags the slideshow */
   onDragging?: CallbackFunction;
   /** Callback that is called whenever the user stops dragging */
@@ -137,6 +139,7 @@ class Lumens {
       draggable: true,
       preventTouchDrag: true,
       dragThreshold: 50,
+      arrowKeys: false,
       onInit: () => {},
       onDragging: () => {},
       onStopDragging: () => {},
@@ -145,10 +148,10 @@ class Lumens {
       onChangeResponsive: () => {},
       onSlideChange: () => {},
       onSlideChanged: () => {},
-      onDestroy: () => {}
+      onDestroy: () => {},
     };
 
-    Object.keys(defaultOptions).forEach(key => {
+    Object.keys(defaultOptions).forEach((key) => {
       if (key === "responsive" || key === "inheritOptions") return false;
 
       if (options[key] !== undefined && options[key] !== null) {
@@ -284,11 +287,11 @@ class Lumens {
       endClones.push(endCloneNode);
     }
 
-    startClones.forEach(clone => {
+    startClones.forEach((clone) => {
       this.wrapper.append(clone);
     });
 
-    endClones.forEach(clone => {
+    endClones.forEach((clone) => {
       this.wrapper.prepend(clone);
     });
 
@@ -334,7 +337,7 @@ class Lumens {
     let hasDragged = false;
     let dragDelta;
 
-    const startDragFunction = e => {
+    const startDragFunction = (e) => {
       if (!this.options.draggable) return false;
 
       this.stopAutoplayInterval();
@@ -351,7 +354,7 @@ class Lumens {
       this.transition(false);
     };
 
-    const moveDragFunction = e => {
+    const moveDragFunction = (e) => {
       if (!isDragging || !this.options.draggable) return false;
 
       if (e.type === "touchmove") {
@@ -370,7 +373,7 @@ class Lumens {
       this.options.onDragging(this);
     };
 
-    const releaseDragFunction = e => {
+    const releaseDragFunction = (e) => {
       if (!hasFocus || !this.options.draggable) return false;
 
       hasFocus = false;
@@ -406,7 +409,7 @@ class Lumens {
 
     document.addEventListener("mousemove", moveDragFunction);
     document.addEventListener("touchmove", moveDragFunction, {
-      passive: false
+      passive: false,
     });
 
     this.container.addEventListener("mousedown", startDragFunction);
@@ -442,7 +445,6 @@ class Lumens {
         this.options.onFinishAnimating(this);
         if (changedSlide) {
           this.options.onSlideChanged(this);
-
           this.loopHandler();
         }
       }, this.options.animationSpeed);
@@ -541,6 +543,22 @@ class Lumens {
   }
 
   /**
+   * Will return the exact calculated amount
+   * of pixels a given slide takes on the screen
+   * this includes the margin aswell
+   * @param el The slide to calculate
+   * @returns {number} The calculated width
+   */
+  getSlideWidth(el: HTMLElement): number {
+    let width = 0;
+    const computed = window.getComputedStyle(el, null);
+    width += parseFloat(computed.getPropertyValue("width"));
+    width += parseFloat(computed.getPropertyValue("margin-right"));
+    width += parseFloat(computed.getPropertyValue("margin-left"));
+    return width;
+  }
+
+  /**
    * Will calculate the offset ot the
    * given page and scroll to it
    * @param page The page to go to (starting at 0)
@@ -566,19 +584,43 @@ class Lumens {
   }
 
   /**
-   * Will return the exact calculated amount
-   * of pixels a given slide takes on the screen
-   * this includes the margin aswell
-   * @param el The slide to calculate
-   * @returns {number} The calculated width
+   * Will advance the slideshow to the next slide.
+   * If the last slide is reached, the slideshow will
+   * either stop or go back to the beginning, based
+   * on the given parameter
+   * Alias: next
+   * @param loopAround If set to true, the slideshow
+   * will jump to the first slide if the last slide is surpassed
+   * (Will not work if infinite loop is enabled)
+   * @returns {number} The now active slide
    */
-  getSlideWidth(el: HTMLElement): number {
-    let width = 0;
-    const computed = window.getComputedStyle(el, null);
-    width += parseFloat(computed.getPropertyValue("width"));
-    width += parseFloat(computed.getPropertyValue("margin-right"));
-    width += parseFloat(computed.getPropertyValue("margin-left"));
-    return width;
+  gotoNext(loopAround: boolean = false): number {
+    if (this.currentPage < this.slides.length - 1) {
+      this.gotoPage(this.currentPage + 1);
+    } else if (loopAround) {
+      this.gotoPage(0);
+    }
+    return this.currentPage;
+  }
+
+  /**
+   * Will revert the slideshow to the previous slide.
+   * If the first slide is reached, the slideshow will
+   * either stop or go to the final slide, based
+   * on the given parameter.
+   * Alias: previous, prev
+   * @param loopAround If set to true, the slideshow
+   * will jump to the last slide if the first slide is surpassed
+   * (Will not work if infinite loop is enabled)
+   * @returns {number} The now active slide
+   */
+  gotoPrev(loopAround: boolean = false): number {
+    if (this.currentPage > 0) {
+      this.gotoPage(this.currentPage - 1);
+    } else if (loopAround) {
+      this.gotoPage(this.slides.length - 1);
+    }
+    return this.currentPage;
   }
 
   /**
@@ -603,9 +645,26 @@ class Lumens {
     }
 
     const clones = this.container.querySelectorAll(".lumens__clone");
-    clones.forEach(clone => clone.remove());
+    clones.forEach((clone) => clone.remove());
 
     this.options.onDestroy(this);
     this.setOptions({});
   }
 }
+
+/**
+ * Defining some alias functions for simpler usage
+ */
+interface Lumens {
+  next: typeof Lumens.prototype.gotoNext;
+  prev: typeof Lumens.prototype.gotoPrev;
+  previous: typeof Lumens.prototype.gotoPrev;
+  goto: typeof Lumens.prototype.gotoPage;
+  kill: typeof Lumens.prototype.destroy;
+}
+
+Lumens.prototype.next = Lumens.prototype.gotoNext;
+Lumens.prototype.prev = Lumens.prototype.gotoPrev;
+Lumens.prototype.previous = Lumens.prototype.gotoPrev;
+Lumens.prototype.goto = Lumens.prototype.gotoPage;
+Lumens.prototype.kill = Lumens.prototype.destroy;
