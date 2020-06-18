@@ -6,6 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1"
     />
+    <script src="js/prism.min.js"></script>
     <script src="js/lumens.js"></script>
     <script src="js/main.js"></script>
     <title>Lumens 2</title>
@@ -90,6 +91,9 @@
             This is as simple as it gets. No options passed. One line of
             JavaScript
           </p>
+
+          <pre class="language-js"><code class="language-js">new Lumens("#default-slider");</code></pre>
+
           <div id="default-slider" class="default-slider">
             <div class="default-slider__slide">
               <p class="default-slider__content">Slide 1</p>
@@ -114,6 +118,20 @@
             This slider has 2 slides if the window width is above 1000px and 1
             slide otherwise.
           </p>
+
+          <pre class="language-js"><code class="language-js">new Lumens("#responsive-slider", {
+  slidesPerPage: 2,
+  responsive: [
+    {
+      width: 1000,
+      options: {
+        slidesPerPage: 1
+      }
+    }
+  ]
+});</code></pre>
+          
+
           <div id="responsive-slider" class="responsive-slider">
             <div class="responsive-slider__slide">
               <p class="responsive-slider__content">Slide 1</p>
@@ -138,6 +156,11 @@
             When passing the 'loop' option to the slider, it will scroll
             infinitley
           </p>
+
+          <pre class="language-js"><code class="language-js">new Lumens("#loop-slider", {
+  loop: true
+});</code></pre>
+
           <div id="loop-slider" class="loop-slider">
             <div class="loop-slider__slide">
               <p class="loop-slider__content">Slide 1</p>
@@ -162,6 +185,10 @@
             Using a little JavaScript and the methods Lumens provides, you can
             make a slider controlled with thumbnails.
           </p>
+
+          <pre class="language-js"><code class="language-js">
+
+</code></pre>
           <div
             id="thumbnail-slider--large"
             class="thumbnail-slider thumbnail-slider--large"
@@ -271,6 +298,44 @@
             </div>
           </div>
         </article>
+
+        <article class="article">
+          <h2 class="article__title">Callbacks</h2>
+          <p>Select the callbacks you want the slideshow to trigger</p>
+          <div class="callback-checkbox">
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onDragging">onDragging </label><input class="callback-checkbox__input" type="checkbox" name="" id="onDragging" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onStopDragging">onStopDragging </label><input class="callback-checkbox__input" type="checkbox" name="" id="onStopDragging" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onAnimating">onAnimating </label><input class="callback-checkbox__input" type="checkbox" name="" id="onAnimating" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onFinishAnimating">onFinishAnimating </label><input class="callback-checkbox__input" type="checkbox" name="" id="onFinishAnimating" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onDestroy">onDestroy </label><input class="callback-checkbox__input" type="checkbox" name="" id="onDestroy" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onInit">onInit </label><input class="callback-checkbox__input" type="checkbox" name="" id="onInit" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onChangeResponsive">onChangeResponsive </label><input class="callback-checkbox__input" type="checkbox" name="" id="onChangeResponsive" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onSlideChange">onSlideChange </label><input class="callback-checkbox__input" type="checkbox" name="" id="onSlideChange" checked></div>
+            <div class="callback-checkbox__container"><label class="callback-checkbox__label" for="onSlideChanged">onSlideChanged </label><input class="callback-checkbox__input" type="checkbox" name="" id="onSlideChanged" checked></div>
+          </div>
+
+          <div id="callback-slider" class="callback-slider">
+            <div class="callback-slider__slide">
+              <p class="callback-slider__content">Slide 1</p>
+            </div>
+            <div class="callback-slider__slide">
+              <p class="callback-slider__content">Slide 2</p>
+            </div>
+            <div class="callback-slider__slide">
+              <p class="callback-slider__content">Slide 3</p>
+            </div>
+            <div class="callback-slider__slide">
+              <p class="callback-slider__content">Slide 4</p>
+            </div>
+            <div class="callback-slider__slide">
+              <p class="callback-slider__content">Slide 5</p>
+            </div>
+          </div>
+          
+          
+          <textarea readonly id="callback-log"></textarea>
+        </article>
+
       </section>
 
       <section class="main-section" id="documentation">

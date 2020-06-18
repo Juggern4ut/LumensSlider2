@@ -1,0 +1,14 @@
+.callback-checkbox {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #dedede;
+
+  &__container {
+    flex-grow: 1;
+    border: 1px solid #dedede;
+  }
+  &__label {
+    padding: 10px;
+    display: inline-block;
+  }
+}

@@ -1,11 +1,16 @@
-@import 'header';
-@import 'main-article';
-@import 'nav';
-@import 'reset';
-@import 'typography';
-@import 'table';
+@import 'base/reset';
+@import 'base/typography';
 
-@import 'slider/default-slider';
-@import 'slider/loop-slider';
-@import 'slider/responsive-slider';
-@import 'slider/thumbnail-slider';
+@import 'vendors/prism';
+
+@import 'layout/header';
+@import 'layout/main-article';
+@import 'layout/nav';
+
+@import 'components/callback-checkbox';
+@import 'components/callback-slider';
+@import 'components/default-slider';
+@import 'components/loop-slider';
+@import 'components/responsive-slider';
+@import 'components/table';
+@import 'components/thumbnail-slider';

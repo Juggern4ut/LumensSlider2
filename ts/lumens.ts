@@ -110,7 +110,7 @@ class Lumens {
     if (this.currentPage !== 0) {
       this.gotoPage(this.currentPage, false);
     }
-
+    
     this.options.onInit(this);
     this.startAutoplayInterval();
   }
@@ -151,7 +151,7 @@ class Lumens {
       onDestroy: () => {},
     };
 
-    Object.keys(defaultOptions).forEach((key) => {
+    Object.keys(defaultOptions).forEach(key => {
       if (key === "responsive" || key === "inheritOptions") return false;
 
       if (options[key] !== undefined && options[key] !== null) {
@@ -287,11 +287,11 @@ class Lumens {
       endClones.push(endCloneNode);
     }
 
-    startClones.forEach((clone) => {
+    startClones.forEach(clone => {
       this.wrapper.append(clone);
     });
 
-    endClones.forEach((clone) => {
+    endClones.forEach(clone => {
       this.wrapper.prepend(clone);
     });
 
@@ -337,7 +337,7 @@ class Lumens {
     let hasDragged = false;
     let dragDelta;
 
-    const startDragFunction = (e) => {
+    const startDragFunction = e => {
       if (!this.options.draggable) return false;
 
       this.stopAutoplayInterval();
@@ -354,7 +354,7 @@ class Lumens {
       this.transition(false);
     };
 
-    const moveDragFunction = (e) => {
+    const moveDragFunction = e => {
       if (!isDragging || !this.options.draggable) return false;
 
       if (e.type === "touchmove") {
@@ -373,7 +373,7 @@ class Lumens {
       this.options.onDragging(this);
     };
 
-    const releaseDragFunction = (e) => {
+    const releaseDragFunction = e => {
       if (!hasFocus || !this.options.draggable) return false;
 
       hasFocus = false;
@@ -559,6 +559,96 @@ class Lumens {
   }
 
   /**
+   * Sets the callbackfunction for onSlideChanged
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onSlideChanged(callback: CallbackFunction): Lumens {
+    this.options.onSlideChanged = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onDragging
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onDragging(callback: CallbackFunction): Lumens {
+    this.options.onDragging = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onStopDragging
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onStopDragging(callback: CallbackFunction): Lumens {
+    this.options.onStopDragging = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onAnimating
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onAnimating(callback: CallbackFunction): Lumens {
+    this.options.onAnimating = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onFinishAnimating
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onFinishAnimating(callback: CallbackFunction): Lumens {
+    this.options.onFinishAnimating = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onDestroy
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onDestroy(callback: CallbackFunction): Lumens {
+    this.options.onDestroy = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onInit
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onInit(callback: CallbackFunction): Lumens {
+    this.options.onInit = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onChangeResponsive
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onChangeResponsive(callback: CallbackFunction): Lumens {
+    this.options.onChangeResponsive = callback;
+    return this;
+  }
+
+  /**
+   * Sets the callbackfunction for onSlideChange
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onSlideChange(callback: CallbackFunction): Lumens {
+    this.options.onSlideChange = callback;
+    return this;
+  }
+
+  /**
    * Will calculate the offset ot the
    * given page and scroll to it
    * @param page The page to go to (starting at 0)
@@ -645,7 +735,7 @@ class Lumens {
     }
 
     const clones = this.container.querySelectorAll(".lumens__clone");
-    clones.forEach((clone) => clone.remove());
+    clones.forEach(clone => clone.remove());
 
     this.options.onDestroy(this);
     this.setOptions({});

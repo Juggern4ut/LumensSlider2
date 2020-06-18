@@ -443,6 +443,87 @@ var Lumens = /** @class */ (function () {
         return width;
     };
     /**
+     * Sets the callbackfunction for onSlideChanged
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onSlideChanged = function (callback) {
+        this.options.onSlideChanged = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onDragging
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onDragging = function (callback) {
+        this.options.onDragging = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onStopDragging
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onStopDragging = function (callback) {
+        this.options.onStopDragging = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onAnimating
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onAnimating = function (callback) {
+        this.options.onAnimating = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onFinishAnimating
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onFinishAnimating = function (callback) {
+        this.options.onFinishAnimating = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onDestroy
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onDestroy = function (callback) {
+        this.options.onDestroy = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onInit
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onInit = function (callback) {
+        this.options.onInit = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onChangeResponsive
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onChangeResponsive = function (callback) {
+        this.options.onChangeResponsive = callback;
+        return this;
+    };
+    /**
+     * Sets the callbackfunction for onSlideChange
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onSlideChange = function (callback) {
+        this.options.onSlideChange = callback;
+        return this;
+    };
+    /**
      * Will calculate the offset ot the
      * given page and scroll to it
      * @param page The page to go to (starting at 0)
