@@ -5,10 +5,12 @@
   padding: 1rem;
   font-size: 1.4rem;
   position: relative;
-  margin-bottom: 3rem;
+  &:not(:last-of-type) {
+    margin-bottom: 3rem;
+  }
 
   &__title {
-    color: #c11d98;
+    color: #c42cd6;
     margin-bottom: 2rem !important;
     position: relative;
     font-size: 1.6rem;
@@ -17,7 +19,7 @@
       position: absolute;
       display: block;
       content: " ";
-      background-color: #c11d98;
+      background-color: #c42cd6;
       height: 1px;
       width: 4rem;
       bottom: -1rem;
@@ -28,11 +30,58 @@
     position: absolute;
     top: -15px;
     right: -1px;
-    background: #f6f6f6;
     border: 1px solid #dadada;
     border-radius: 3px;
     padding: 2px 5px;
     text-decoration: none;
-    color: green;
+    color: #fff;
+    background-color: #c42cd6;
+    transition: background-color 200ms ease-out;
+
+    &:hover {
+      background-color: lighten(#c42cd6, 8);
+    }
+  }
+
+  &--option &__title {
+    color: #394fca;
+    &::after {
+      background-color: #394fca;
+    }
+  }
+
+  &--option &__type {
+    background-color: #394fca;
+    &:hover {
+      background-color: lighten(#394fca, 8);
+    }
+  }
+
+  &--interface &__title {
+    color: #179215;
+    &::after {
+      background-color: #179215;
+    }
+  }
+
+  &--interface &__type {
+    background-color: #179215;
+    &:hover {
+      background-color: lighten(#179215, 8);
+    }
+  }
+
+  &--function &__title {
+    color: #f08d49;
+    &::after {
+      background-color: #f08d49;
+    }
+  }
+
+  &--function &__type {
+    background-color: #f08d49;
+    &:hover {
+      background-color: lighten(#f08d49, 8);
+    }
   }
 }

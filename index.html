@@ -558,7 +558,7 @@
 
           <h2 class="article__title" id="options">Options</h2>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.slidesPerPage</p>
             <a
               target="_blank"
@@ -571,7 +571,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.preventSelection</p>
             <a
               target="_blank"
@@ -584,7 +584,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.freeScroll</p>
             <a
               target="_blank"
@@ -598,7 +598,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.animationSpeed</p>
             <a
               target="_blank"
@@ -611,7 +611,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.responsive</p>
             <a href="#ResponsiveObject" class="property__type"
               >ResponsiveObject[]</a
@@ -621,7 +621,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title" id="Options-loop">Options.loop</p>
             <a
               target="_blank"
@@ -634,7 +634,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.startingPage</p>
             <a
               target="_blank"
@@ -647,7 +647,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.autoplay</p>
             <a
               target="_blank"
@@ -661,7 +661,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.draggable</p>
             <a
               target="_blank"
@@ -675,7 +675,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.preventTouchDrag</p>
             <a
               target="_blank"
@@ -689,7 +689,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.dragThreshold</p>
             <a
               target="_blank"
@@ -702,7 +702,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.inheritOptions</p>
             <a
               target="_blank"
@@ -717,7 +717,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--option">
             <p class="property__title">Options.arrowKeys</p>
             <a
               target="_blank"
@@ -731,9 +731,12 @@
             </p>
           </article>
 
+          <hr />
+          <br />
+
           <h2 id="ResponsiveObject" class="article__title">ResponsiveObject</h2>
 
-          <article class="property">
+          <article class="property property--interface">
             <p class="property__title">ResponsiveObject.width</p>
             <a
               target="_blank"
@@ -746,7 +749,7 @@
             </p>
           </article>
 
-          <article class="property">
+          <article class="property property--interface">
             <p class="property__title">ResponsiveObject.options</p>
             <a href="#options" class="property__type">Lumens.Options</a>
             <p class="property__description">
@@ -754,55 +757,161 @@
             </p>
           </article>
 
+          <hr />
+          <br />
+
           <h2 class="article__title">Callbacks</h2>
-          <table class="table">
-            <tr class="table__tr">
-              <td class="table__td">onDragging</td>
-              <td class="table__td">
+          <p>
+            All the callback functions that Lumens provides can be used the same
+            way, just them in the options.
+          </p>
+
+          <pre
+            class="language-js"
+          ><code class="language-js">const mySlider = new Lumens("#myContainer", {
+  onSlideChanged: () => {
+    alert("I just changed my Slide!");
+  }
+});</code></pre>
+
+          <br />
+
+          <p>
+            You may also define the function outside of the constructor. This
+            works for all callbacks except onInit.
+          </p>
+
+          <pre
+            class="language-js"
+          ><code class="language-js">const mySlider = new Lumens("#myContainer");
+mySlider.onSlideChanged( () => {
+  alert("I just changed my Slide!");
+});</code></pre>
+
+          <br />
+
+          <h3 class="article__subtitle">List of all callbacks</h3>
+
+          <section id="callbacks">
+            <article class="property property--function">
+              <p class="property__title">onDragging</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
                 Is called whenever the user drags the slideshow
-              </td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onStopDragging</td>
-              <td class="table__td">
-                Is called whenever the user stops dragging
-              </td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onAnimating</td>
-              <td class="table__td">Is called when an animation starts</td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onFinishAnimating</td>
-              <td class="table__td">Is called when an animation is finished</td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onDestroy</td>
-              <td class="table__td">Is called when the slider is destoyed</td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onInit</td>
-              <td class="table__td">
-                Is called when the slider finished initailizing
-              </td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onChangeResponsive</td>
-              <td class="table__td">
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onAnimating</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when an animation starts
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onFinishAnimating</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when an animation is finished
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onFinishAnimating</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when an animation is finished
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onInit</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when the slider finished initailizing. IMPORTANT: This
+                function needs to be set in the constructor and cannot be defined
+                outside.
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onDestroy</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when the slider is destoyed
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onChangeResponsive</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
                 Is called when a responsive breakpoint is reached
-              </td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onSlideChange</td>
-              <td class="table__td">
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onSlideChange</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
                 Is called when the slide is starting to change
-              </td>
-            </tr>
-            <tr class="table__tr">
-              <td class="table__td">onSlideChanged</td>
-              <td class="table__td">Is called when the slide is changed</td>
-            </tr>
-          </table>
+              </p>
+            </article>
+
+            <article class="property property--function">
+              <p class="property__title">onSlideChanged</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                class="property__type"
+                >Function</a
+              >
+              <p class="property__description">
+                Is called when the slide is changed
+              </p>
+            </article>
+          </section>
         </article>
       </section>
     </main>
