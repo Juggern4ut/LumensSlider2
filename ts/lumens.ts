@@ -316,6 +316,7 @@ class Lumens {
 
       slide.style.display = "inline-block";
       slide.style.boxSizing = "border-box";
+      slide.style.whiteSpace = "normal";
       slide.style.width = newWidth;
 
       if (this.options.preventSelection) {
