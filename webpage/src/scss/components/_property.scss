@@ -1,0 +1,38 @@
+.property {
+  background: #f6f6f6;
+  border: 1px solid #dadada;
+  border-radius: 3px;
+  padding: 1rem;
+  font-size: 1.4rem;
+  position: relative;
+  margin-bottom: 3rem;
+
+  &__title {
+    color: #c11d98;
+    margin-bottom: 2rem !important;
+    position: relative;
+    font-size: 1.6rem;
+
+    &::after {
+      position: absolute;
+      display: block;
+      content: " ";
+      background-color: #c11d98;
+      height: 1px;
+      width: 4rem;
+      bottom: -1rem;
+    }
+  }
+
+  &__type {
+    position: absolute;
+    top: -15px;
+    right: -1px;
+    background: #f6f6f6;
+    border: 1px solid #dadada;
+    border-radius: 3px;
+    padding: 2px 5px;
+    text-decoration: none;
+    color: green;
+  }
+}

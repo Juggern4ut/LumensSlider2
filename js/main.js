@@ -74,6 +74,9 @@ var initCallbackSlider = function () {
         else {
             eventStack.push(text + " - 1");
         }
+        if (eventStack.length > 100) {
+            eventStack.shift();
+        }
         var textArea = document.getElementById("callback-log");
         textArea.innerHTML = "";
         eventStack.forEach(function (line, index) {

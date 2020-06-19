@@ -81,6 +81,10 @@ const initCallbackSlider = () => {
       eventStack.push(text + " - 1");
     }
 
+    if(eventStack.length > 100){
+      eventStack.shift();
+    }
+
     const textArea = document.getElementById("callback-log");
     textArea.innerHTML = "";
     eventStack.forEach((line, index) => {
