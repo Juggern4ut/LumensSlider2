@@ -1,4 +1,5 @@
 declare type CallbackFunction = (slider: Lumens) => void;
+declare type CallbackFunctionNumber = (number: number) => void;
 
 interface ResponsiveObject {
   width: number;
@@ -52,6 +53,8 @@ interface Options {
   onSlideChange?: CallbackFunction;
   /** Callback that is called when the slide is changed */
   onSlideChanged?: CallbackFunction;
+  /** Callback that is called when an infinite slideshow is looping around */
+  onLoop?: CallbackFunctionNumber;
 }
 
 class Lumens {
@@ -152,6 +155,7 @@ class Lumens {
       onSlideChange: () => {},
       onSlideChanged: () => {},
       onDestroy: () => {},
+      onLoop: () => {},
     };
 
     Object.keys(defaultOptions).forEach((key) => {
@@ -470,9 +474,11 @@ class Lumens {
     if (cp === 0 && loop) {
       const endIndex = this.slides.length - this.options.slidesPerPage * 2;
       this.gotoPage(endIndex, false);
+      this.options.onLoop(0);
     } else if (cp === this.slides.length - this.options.slidesPerPage && loop) {
       const startIndex = this.options.slidesPerPage;
       this.gotoPage(startIndex, false);
+      this.options.onLoop(1);
     }
   }
 
@@ -659,6 +665,16 @@ class Lumens {
   }
 
   /**
+   * Sets the callbackfunction for onLoop
+   * @param callback The function to call for this event
+   * @returns The current Slider
+   */
+  onLoop(callback: CallbackFunctionNumber): Lumens {
+    this.options.onLoop = callback;
+    return this;
+  }
+
+  /**
    * Will calculate the offset ot the
    * given page and scroll to it
    * @param page The page to go to (starting at 0)
@@ -676,7 +692,18 @@ class Lumens {
       totalOffset += this.getSlideWidth(slide);
     }
 
-    const changed = page !== this.currentPage;
+    let isLooped = false;
+    if (
+      this.options.loop &&
+      ((this.currentPage === this.slides.length - this.options.slidesPerPage &&
+        page === this.options.slidesPerPage) ||
+        (this.currentPage === 0 &&
+          page === this.slides.length - this.options.slidesPerPage * 2))
+    ) {
+      isLooped = true;
+    }
+
+    const changed = page !== this.currentPage && isLooped === false;
     this.currentPosX = totalOffset;
     this.setDragPosition(totalOffset, animate, changed);
     this.currentPage = page;

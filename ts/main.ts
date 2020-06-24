@@ -105,9 +105,21 @@ const initCallbackSlider = () => {
   };
 
   const callbackSlider = new Lumens("#callback-slider", {
+    loop: true,
     onInit: () => {
       addToEventStack("Slideshow initialized");
     },
+  });
+
+  callbackSlider.onLoop((e) => {
+    const box = document.getElementById("onLoop") as HTMLInputElement;
+    if (box.checked) {
+      if (e === 1) {
+        addToEventStack("onLoop (forwards)");
+      } else if (e === 0) {
+        addToEventStack("onLoop (backwards)");
+      }
+    }
   });
 
   callbackSlider.onDragging(() => {

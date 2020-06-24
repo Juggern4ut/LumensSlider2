@@ -90,8 +90,20 @@ var initCallbackSlider = function () {
         textArea.scrollTop = textArea.scrollHeight;
     };
     var callbackSlider = new Lumens("#callback-slider", {
+        loop: true,
         onInit: function () {
             addToEventStack("Slideshow initialized");
+        }
+    });
+    callbackSlider.onLoop(function (e) {
+        var box = document.getElementById("onLoop");
+        if (box.checked) {
+            if (e === 1) {
+                addToEventStack("onLoop (forwards)");
+            }
+            else if (e === 0) {
+                addToEventStack("onLoop (backwards)");
+            }
         }
     });
     callbackSlider.onDragging(function () {

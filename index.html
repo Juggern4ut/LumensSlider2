@@ -416,6 +416,17 @@ for (let i = 0; i &lt; small.slides.length; i++) {
                 checked
               />
             </div>
+            <div class="callback-checkbox__container">
+              <label class="callback-checkbox__label" for="onLoop"
+                >onLoop </label
+              ><input
+                class="callback-checkbox__input"
+                type="checkbox"
+                name=""
+                id="onLoop"
+                checked
+              />
+            </div>
           </div>
 
           <div id="callback-slider" class="callback-slider">
@@ -658,8 +669,9 @@ for (let i = 0; i &lt; small.slides.length; i++) {
               <p class="property__description">
                 If set to false, the slideshow will always be as high as the
                 largest slide in it. If set to true the height will change based
-                on the currently visible slide.<br><strong>Not recommended with
-                more than 1 slides per page.</strong>
+                on the currently visible slide.<br /><strong
+                  >Not recommended with more than 1 slides per page.</strong
+                >
               </p>
             </article>
 
@@ -945,6 +957,21 @@ for (let i = 0; i &lt; small.slides.length; i++) {
                 >
                 <p class="property__description">
                   Is called when the slide is changed
+                </p>
+              </article>
+
+              <article class="property property--function">
+                <p class="property__title">onLoop</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when the Slideshow is looped around. This only works
+                  if the Options.loop is set to true. Will return 0 or 1 based
+                  on the direction the loop was triggered
                 </p>
               </article>
             </section>

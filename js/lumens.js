@@ -77,7 +77,8 @@ var Lumens = /** @class */ (function () {
             onChangeResponsive: function () { },
             onSlideChange: function () { },
             onSlideChanged: function () { },
-            onDestroy: function () { }
+            onDestroy: function () { },
+            onLoop: function () { }
         };
         Object.keys(defaultOptions).forEach(function (key) {
             if (key === "responsive" || key === "inheritOptions")
@@ -357,10 +358,12 @@ var Lumens = /** @class */ (function () {
         if (cp === 0 && loop) {
             var endIndex = this.slides.length - this.options.slidesPerPage * 2;
             this.gotoPage(endIndex, false);
+            this.options.onLoop(0);
         }
         else if (cp === this.slides.length - this.options.slidesPerPage && loop) {
             var startIndex = this.options.slidesPerPage;
             this.gotoPage(startIndex, false);
+            this.options.onLoop(1);
         }
     };
     /**
@@ -533,6 +536,15 @@ var Lumens = /** @class */ (function () {
         return this;
     };
     /**
+     * Sets the callbackfunction for onLoop
+     * @param callback The function to call for this event
+     * @returns The current Slider
+     */
+    Lumens.prototype.onLoop = function (callback) {
+        this.options.onLoop = callback;
+        return this;
+    };
+    /**
      * Will calculate the offset ot the
      * given page and scroll to it
      * @param page The page to go to (starting at 0)
@@ -549,7 +561,15 @@ var Lumens = /** @class */ (function () {
             var slide = this.slides[i];
             totalOffset += this.getSlideWidth(slide);
         }
-        var changed = page !== this.currentPage;
+        var isLooped = false;
+        if (this.options.loop &&
+            ((this.currentPage === this.slides.length - this.options.slidesPerPage &&
+                page === this.options.slidesPerPage) ||
+                (this.currentPage === 0 &&
+                    page === this.slides.length - this.options.slidesPerPage * 2))) {
+            isLooped = true;
+        }
+        var changed = page !== this.currentPage && isLooped === false;
         this.currentPosX = totalOffset;
         this.setDragPosition(totalOffset, animate, changed);
         this.currentPage = page;
