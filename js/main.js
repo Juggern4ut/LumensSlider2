@@ -5,12 +5,7 @@ window.onload = function () {
     initLoopSlider();
     initThumbnailSlider();
     initCallbackSlider();
-    initHeightSlider();
-};
-var initHeightSlider = function () {
-    window["a"] = new Lumens("#height-slider", {
-        variableHeight: true
-    });
+    new Lumens("#meineDivId");
 };
 var initHeaderSlider = function () {
     new Lumens(".header__slider", {

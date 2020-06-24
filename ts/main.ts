@@ -5,13 +5,8 @@ window.onload = () => {
   initLoopSlider();
   initThumbnailSlider();
   initCallbackSlider();
-  initHeightSlider();
-};
 
-const initHeightSlider = () => {
-  window["a"] = new Lumens("#height-slider", {
-    variableHeight: true,
-  });
+  new Lumens("#meineDivId");
 };
 
 const initHeaderSlider = () => {

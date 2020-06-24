@@ -15,12 +15,17 @@ var Lumens = /** @class */ (function () {
         this.inheritOptions = true;
         if (typeof selector === "string") {
             var container = document.querySelector(selector);
-            if (!container)
+            if (!container) {
+                console.warn("No Element could be found using the given selector: \"" + selector + "\"");
                 return null;
+            }
             this.container = container;
         }
         else if (selector instanceof HTMLElement) {
             this.container = selector;
+        }
+        else {
+            throw new Error("The selector passed is neither a string nor an instance of an HTMLElement");
         }
         if (!options.responsive) {
             options.responsive = [];

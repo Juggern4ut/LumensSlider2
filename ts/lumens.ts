@@ -86,10 +86,21 @@ class Lumens {
   ) {
     if (typeof selector === "string") {
       const container = document.querySelector(selector) as HTMLElement;
-      if (!container) return null;
+
+      if (!container) {
+        console.warn(
+          `No Element could be found using the given selector: "${selector}"`
+        );
+        return null;
+      }
+      
       this.container = container;
     } else if (selector instanceof HTMLElement) {
       this.container = selector;
+    } else {
+      throw new Error(
+        `The selector passed is neither a string nor an instance of an HTMLElement`
+      );
     }
 
     if (!options.responsive) {
