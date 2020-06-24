@@ -347,6 +347,19 @@ var Lumens = /** @class */ (function () {
         this.container.addEventListener("touchstart", startDragFunction);
     };
     /**
+     * Will calculate the height of the given slide taking margins into account
+     * @param slide The slide of which the height should be calculated
+     * @returns The height of the given slide
+     */
+    Lumens.prototype.getNewWrapperHeight = function (slide) {
+        var calcSlide = slide;
+        var totalMargin = 0;
+        var compStyle = window.getComputedStyle(calcSlide);
+        totalMargin += parseFloat(compStyle.getPropertyValue("margin-top"));
+        totalMargin += parseFloat(compStyle.getPropertyValue("margin-bottom"));
+        return slide.offsetHeight + totalMargin;
+    };
+    /**
      * Will set the scrollposition of the
      * slideshow
      * @param offset The offset to set the slideshow to
@@ -444,8 +457,8 @@ var Lumens = /** @class */ (function () {
             this.setDragPosition(this.currentPosX, animate, changedSlide);
         }
         if (this.options.variableHeight) {
-            var slide = this.slides[this.currentPage];
-            this.wrapper.style.height = slide.offsetHeight + "px";
+            this.wrapper.style.height =
+                this.getNewWrapperHeight(this.slides[this.currentPage]) + "px";
         }
     };
     /**
@@ -607,7 +620,8 @@ var Lumens = /** @class */ (function () {
         this.currentPage = page;
         if (this.options.variableHeight) {
             var slide = this.slides[this.currentPage];
-            this.wrapper.style.height = slide.offsetHeight + "px";
+            this.wrapper.style.height =
+                this.getNewWrapperHeight(this.slides[this.currentPage]) + "px";
         }
         return true;
     };

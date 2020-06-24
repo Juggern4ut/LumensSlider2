@@ -463,6 +463,21 @@ class Lumens {
   }
 
   /**
+   * Will calculate the height of the given slide taking margins into account
+   * @param slide The slide of which the height should be calculated
+   * @returns The height of the given slide
+   */
+  getNewWrapperHeight(slide) {
+    let calcSlide = slide as HTMLElement;
+    let totalMargin = 0;
+    const compStyle = window.getComputedStyle(calcSlide);
+    totalMargin += parseFloat(compStyle.getPropertyValue("margin-top"));
+    totalMargin += parseFloat(compStyle.getPropertyValue("margin-bottom"));
+
+    return slide.offsetHeight + totalMargin;
+  }
+
+  /**
    * Will set the scrollposition of the
    * slideshow
    * @param offset The offset to set the slideshow to
@@ -567,9 +582,9 @@ class Lumens {
       this.setDragPosition(this.currentPosX, animate, changedSlide);
     }
 
-    if(this.options.variableHeight){
-      let slide = this.slides[this.currentPage] as HTMLElement;
-      this.wrapper.style.height = slide.offsetHeight + "px";
+    if (this.options.variableHeight) {
+      this.wrapper.style.height =
+        this.getNewWrapperHeight(this.slides[this.currentPage]) + "px";
     }
   }
 
@@ -750,7 +765,8 @@ class Lumens {
     this.currentPage = page;
     if (this.options.variableHeight) {
       let slide = this.slides[this.currentPage] as HTMLElement;
-      this.wrapper.style.height = slide.offsetHeight + "px";
+      this.wrapper.style.height =
+        this.getNewWrapperHeight(this.slides[this.currentPage]) + "px";
     }
     return true;
   }
