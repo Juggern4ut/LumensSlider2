@@ -70,6 +70,7 @@ class Lumens {
   animationTimeout: number;
   wasDragged: boolean = false;
   inheritOptions: boolean = true;
+  arrowKeyFunction;
 
   /**
    * Will setup the DOM and EventListeners
@@ -108,6 +109,15 @@ class Lumens {
     this.addDragListeners();
     this.responsiveHandler();
 
+    this.arrowKeyFunction = (e) => {
+      if (e.keyCode === 37) {
+        this.gotoPrev();
+      } else if (e.keyCode === 39) {
+        this.gotoNext();
+      }
+    };
+    this.arrowKeyControls();
+
     if (this.options.loop) {
       this.createCloneNodes();
     }
@@ -124,7 +134,6 @@ class Lumens {
    * Will define the default settings
    * and overwrite them with the passed
    * options
-   * @author {Lukas Meier}
    * @param options The custom options to pass
    * @returns {void}
    */
@@ -178,6 +187,18 @@ class Lumens {
         }
       }
     });
+  }
+
+  /**
+   * Will enable the control of the slideshow
+   * using the arrow keys
+   * @returns {void}
+   */
+  arrowKeyControls() {
+    document.removeEventListener("keydown", this.arrowKeyFunction, true);
+    if (this.options.arrowKeys) {
+      document.addEventListener("keydown", this.arrowKeyFunction, true);
+    }
   }
 
   /**
@@ -239,6 +260,7 @@ class Lumens {
           this.setOptions(this.initialOptions);
         }
         this.styleSlides();
+        this.arrowKeyControls();
         this.options.onChangeResponsive(this);
       }
       this.gotoPage(this.currentPage, false);

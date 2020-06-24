@@ -7,6 +7,7 @@ var Lumens = /** @class */ (function () {
      * @param logWarnings If true, the slider may log errors and warnings to the console
      */
     function Lumens(selector, options, logWarnings) {
+        var _this = this;
         if (options === void 0) { options = {}; }
         this.currentPosX = 0;
         this.currentPage = 0;
@@ -34,6 +35,15 @@ var Lumens = /** @class */ (function () {
         this.styleSlides();
         this.addDragListeners();
         this.responsiveHandler();
+        this.arrowKeyFunction = function (e) {
+            if (e.keyCode === 37) {
+                _this.gotoPrev();
+            }
+            else if (e.keyCode === 39) {
+                _this.gotoNext();
+            }
+        };
+        this.arrowKeyControls();
         if (this.options.loop) {
             this.createCloneNodes();
         }
@@ -47,7 +57,6 @@ var Lumens = /** @class */ (function () {
      * Will define the default settings
      * and overwrite them with the passed
      * options
-     * @author {Lukas Meier}
      * @param options The custom options to pass
      * @returns {void}
      */
@@ -101,6 +110,17 @@ var Lumens = /** @class */ (function () {
                 }
             }
         });
+    };
+    /**
+     * Will enable the control of the slideshow
+     * using the arrow keys
+     * @returns {void}
+     */
+    Lumens.prototype.arrowKeyControls = function () {
+        document.removeEventListener("keydown", this.arrowKeyFunction, true);
+        if (this.options.arrowKeys) {
+            document.addEventListener("keydown", this.arrowKeyFunction, true);
+        }
     };
     /**
      * Will start the autoplay interval
@@ -158,6 +178,7 @@ var Lumens = /** @class */ (function () {
                     _this.setOptions(_this.initialOptions);
                 }
                 _this.styleSlides();
+                _this.arrowKeyControls();
                 _this.options.onChangeResponsive(_this);
             }
             _this.gotoPage(_this.currentPage, false);
