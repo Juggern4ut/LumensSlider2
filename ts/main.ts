@@ -16,12 +16,7 @@ const initHeaderSlider = () => {
 };
 
 const initDefaultSlider = () => {
-  window["slide"] = new Lumens("#default-slider", {
-    loop: true,
-    slidesPerPage: 2,
-  });
-  window["el"] = document.createElement("div");
-  window["el"].innerHTML = "SLIDE!";
+  new Lumens("#default-slider");
 };
 
 const initResponsioveSlider = () => {
