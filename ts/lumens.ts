@@ -567,8 +567,10 @@ class Lumens {
       this.setDragPosition(this.currentPosX, animate, changedSlide);
     }
 
-    let slide = this.slides[this.currentPage] as HTMLElement;
-    this.wrapper.style.height = slide.offsetHeight + "px";
+    if(this.options.variableHeight){
+      let slide = this.slides[this.currentPage] as HTMLElement;
+      this.wrapper.style.height = slide.offsetHeight + "px";
+    }
   }
 
   /**

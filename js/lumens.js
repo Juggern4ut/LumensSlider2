@@ -422,8 +422,8 @@ var Lumens = /** @class */ (function () {
         var totalWidth = 0;
         var animate = false;
         for (var i = 0; i < this.slides.length - this.options.slidesPerPage; i++) {
-            var slide_1 = this.slides[i];
-            totalWidth += this.getSlideWidth(slide_1);
+            var slide = this.slides[i];
+            totalWidth += this.getSlideWidth(slide);
         }
         if (this.currentPosX < 0) {
             this.currentPosX = 0;
@@ -443,8 +443,10 @@ var Lumens = /** @class */ (function () {
             var changedSlide = initialPage !== this.currentPage;
             this.setDragPosition(this.currentPosX, animate, changedSlide);
         }
-        var slide = this.slides[this.currentPage];
-        this.wrapper.style.height = slide.offsetHeight + "px";
+        if (this.options.variableHeight) {
+            var slide = this.slides[this.currentPage];
+            this.wrapper.style.height = slide.offsetHeight + "px";
+        }
     };
     /**
      * Will calculate the closest page to the
