@@ -5,6 +5,12 @@ window.onload = function () {
     initLoopSlider();
     initThumbnailSlider();
     initCallbackSlider();
+    initHeightSlider();
+};
+var initHeightSlider = function () {
+    window["a"] = new Lumens("#height-slider", {
+        variableHeight: true
+    });
 };
 var initHeaderSlider = function () {
     new Lumens(".header__slider", {
@@ -35,7 +41,9 @@ var initLoopSlider = function () {
     });
 };
 var initThumbnailSlider = function () {
-    var large = new Lumens("#thumbnail-slider--large");
+    var large = new Lumens("#thumbnail-slider--large", {
+        variableHeight: true
+    });
     var small = new Lumens("#thumbnail-slider--small", {
         slidesPerPage: 3
     });
@@ -48,17 +56,13 @@ var initThumbnailSlider = function () {
         }
         small.slides[large.currentPage].classList.add("thumbnail-slider__slide--active");
     });
-    var _loop_1 = function (i) {
-        var slide = small.slides[i];
-        slide.addEventListener("click", function (e) {
+    Array.from(small.slides).forEach(function (slide, i) {
+        slide.addEventListener("click", function () {
             if (!small.wasDragged) {
                 large.gotoPage(i, true);
             }
         });
-    };
-    for (var i = 0; i < small.slides.length; i++) {
-        _loop_1(i);
-    }
+    });
 };
 var initCallbackSlider = function () {
     var eventStack = [];

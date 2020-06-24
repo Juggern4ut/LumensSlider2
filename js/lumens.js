@@ -62,6 +62,7 @@ var Lumens = /** @class */ (function () {
             responsive: [],
             inheritOptions: true,
             loop: false,
+            variableHeight: false,
             startingPage: 0,
             autoplay: false,
             draggable: true,
@@ -180,6 +181,7 @@ var Lumens = /** @class */ (function () {
         this.container.style.overflow = "hidden";
         this.wrapper.style.whiteSpace = "nowrap";
         this.wrapper.style.height = "100%";
+        this.wrapper.style.transition = "height 200ms ease-out";
         this.wrapper.style.position = "relative";
         this.wrapper.style.right = "0";
         this.slides = this.wrapper.children;
@@ -226,6 +228,7 @@ var Lumens = /** @class */ (function () {
             var newWidth = "calc((100% / " + this.options.slidesPerPage + ") - " + marginTotal + "px)";
             slide.style.display = "inline-block";
             slide.style.boxSizing = "border-box";
+            slide.style.verticalAlign = "top";
             slide.style.whiteSpace = "normal";
             slide.style.width = newWidth;
             if (this.options.preventSelection) {
@@ -367,10 +370,15 @@ var Lumens = /** @class */ (function () {
      */
     Lumens.prototype.transition = function (enable) {
         if (enable) {
-            this.wrapper.style.transition = "right " + this.options.animationSpeed + "ms ease-out";
+            this.wrapper.style.transition = this.options.animationSpeed + "ms ease-out";
         }
         else {
-            this.wrapper.style.transition = "none";
+            if (this.options.variableHeight) {
+                this.wrapper.style.transition = "height " + this.options.animationSpeed + "ms ease-out";
+            }
+            else {
+                this.wrapper.style.transition = "none";
+            }
         }
     };
     /**
@@ -545,6 +553,10 @@ var Lumens = /** @class */ (function () {
         this.currentPosX = totalOffset;
         this.setDragPosition(totalOffset, animate, changed);
         this.currentPage = page;
+        if (this.options.variableHeight) {
+            var slide = this.slides[this.currentPage];
+            this.wrapper.style.height = slide.offsetHeight + "px";
+        }
         return true;
     };
     /**

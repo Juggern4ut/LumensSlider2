@@ -1,13 +1,16 @@
 .thumbnail-slider {
   width: calc(100% + 2rem);
   margin-left: -1rem;
-  &--large {
-    height: 20rem;
-    margin-bottom: 2rem;
-  }
 
+  &--large {
+    margin: 2rem auto;
+    width: 30rem;
+  }
+  
   &--small {
-    height: 10rem;
+    margin: 0 auto 2rem auto;
+    width: 32rem;
+    height: 8rem;
   }
 
   &--small &__slide{

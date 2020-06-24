@@ -18,6 +18,8 @@ interface Options {
   responsive?: ResponsiveObject[];
   /** If set to true, the slider can be scrolled infinitly */
   loop?: boolean;
+  /** If set to true, the slider will only be as high as the current slide */
+  variableHeight?: boolean;
   /** The page the slideshow should start on */
   startingPage?: number;
   /** Amount of milliseconds until the slideshow goes to the next slide automatically */
@@ -110,7 +112,7 @@ class Lumens {
     if (this.currentPage !== 0) {
       this.gotoPage(this.currentPage, false);
     }
-    
+
     this.options.onInit(this);
     this.startAutoplayInterval();
   }
@@ -134,6 +136,7 @@ class Lumens {
       responsive: [],
       inheritOptions: true,
       loop: false,
+      variableHeight: false,
       startingPage: 0,
       autoplay: false,
       draggable: true,
@@ -151,7 +154,7 @@ class Lumens {
       onDestroy: () => {},
     };
 
-    Object.keys(defaultOptions).forEach(key => {
+    Object.keys(defaultOptions).forEach((key) => {
       if (key === "responsive" || key === "inheritOptions") return false;
 
       if (options[key] !== undefined && options[key] !== null) {
@@ -260,6 +263,7 @@ class Lumens {
 
     this.wrapper.style.whiteSpace = "nowrap";
     this.wrapper.style.height = "100%";
+    this.wrapper.style.transition = "height 200ms ease-out";
     this.wrapper.style.position = "relative";
     this.wrapper.style.right = "0";
 
@@ -287,11 +291,11 @@ class Lumens {
       endClones.push(endCloneNode);
     }
 
-    startClones.forEach(clone => {
+    startClones.forEach((clone) => {
       this.wrapper.append(clone);
     });
 
-    endClones.forEach(clone => {
+    endClones.forEach((clone) => {
       this.wrapper.prepend(clone);
     });
 
@@ -316,6 +320,7 @@ class Lumens {
 
       slide.style.display = "inline-block";
       slide.style.boxSizing = "border-box";
+      slide.style.verticalAlign = "top";
       slide.style.whiteSpace = "normal";
       slide.style.width = newWidth;
 
@@ -338,7 +343,7 @@ class Lumens {
     let hasDragged = false;
     let dragDelta;
 
-    const startDragFunction = e => {
+    const startDragFunction = (e) => {
       if (!this.options.draggable) return false;
 
       this.stopAutoplayInterval();
@@ -355,7 +360,7 @@ class Lumens {
       this.transition(false);
     };
 
-    const moveDragFunction = e => {
+    const moveDragFunction = (e) => {
       if (!isDragging || !this.options.draggable) return false;
 
       if (e.type === "touchmove") {
@@ -374,7 +379,7 @@ class Lumens {
       this.options.onDragging(this);
     };
 
-    const releaseDragFunction = e => {
+    const releaseDragFunction = (e) => {
       if (!hasFocus || !this.options.draggable) return false;
 
       hasFocus = false;
@@ -478,9 +483,13 @@ class Lumens {
    */
   transition(enable: boolean): void {
     if (enable) {
-      this.wrapper.style.transition = `right ${this.options.animationSpeed}ms ease-out`;
+      this.wrapper.style.transition = `${this.options.animationSpeed}ms ease-out`;
     } else {
-      this.wrapper.style.transition = "none";
+      if (this.options.variableHeight) {
+        this.wrapper.style.transition = `height ${this.options.animationSpeed}ms ease-out`;
+      } else {
+        this.wrapper.style.transition = "none";
+      }
     }
   }
 
@@ -671,6 +680,10 @@ class Lumens {
     this.currentPosX = totalOffset;
     this.setDragPosition(totalOffset, animate, changed);
     this.currentPage = page;
+    if (this.options.variableHeight) {
+      let slide = this.slides[this.currentPage] as HTMLElement;
+      this.wrapper.style.height = slide.offsetHeight + "px";
+    }
     return true;
   }
 
@@ -736,7 +749,7 @@ class Lumens {
     }
 
     const clones = this.container.querySelectorAll(".lumens__clone");
-    clones.forEach(clone => clone.remove());
+    clones.forEach((clone) => clone.remove());
 
     this.options.onDestroy(this);
     this.setOptions({});

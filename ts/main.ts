@@ -5,6 +5,13 @@ window.onload = () => {
   initLoopSlider();
   initThumbnailSlider();
   initCallbackSlider();
+  initHeightSlider();
+};
+
+const initHeightSlider = () => {
+  window["a"] = new Lumens("#height-slider", {
+    variableHeight: true,
+  });
 };
 
 const initHeaderSlider = () => {
@@ -40,7 +47,10 @@ const initLoopSlider = () => {
 };
 
 const initThumbnailSlider = () => {
-  const large = new Lumens("#thumbnail-slider--large");
+  const large = new Lumens("#thumbnail-slider--large", {
+    variableHeight: true,
+  });
+
   const small = new Lumens("#thumbnail-slider--small", {
     slidesPerPage: 3,
   });
@@ -57,20 +67,19 @@ const initThumbnailSlider = () => {
     );
   });
 
-  for (let i = 0; i < small.slides.length; i++) {
-    const slide = small.slides[i];
-    slide.addEventListener("click", e => {
+  Array.from(small.slides).forEach((slide, i) => {
+    slide.addEventListener("click", () => {
       if (!small.wasDragged) {
         large.gotoPage(i, true);
       }
     });
-  }
+  });
 };
 
 const initCallbackSlider = () => {
   let eventStack = [];
 
-  const addToEventStack = text => {
+  const addToEventStack = (text) => {
     if (eventStack.length === 0) {
       eventStack.push(text + " - 1");
     } else if (eventStack[eventStack.length - 1].indexOf(text) === 0) {
@@ -81,7 +90,7 @@ const initCallbackSlider = () => {
       eventStack.push(text + " - 1");
     }
 
-    if(eventStack.length > 100){
+    if (eventStack.length > 100) {
       eventStack.shift();
     }
 

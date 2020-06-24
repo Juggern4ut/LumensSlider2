@@ -83,6 +83,7 @@
           </p>
         </article>
       </section>
+
       <section class="main-section" id="demo">
         <h1 class="heading-primary">Demos</h1>
         <article class="article">
@@ -191,61 +192,69 @@
             make a slider controlled with thumbnails.
           </p>
 
-          <pre class="language-js"><code class="language-js">
+          <pre
+            class="language-js"
+          ><code class="language-js">// First initialize the two sliders
+const large = new Lumens("#thumbnail-slider--large", {
+  variableHeight: true,
+});
 
+const small = new Lumens("#thumbnail-slider--small", {
+  slidesPerPage: 3,
+});
+
+// Add a onSlideChanged eventlistener where the new index of 
+// the thumbnail-slider is calculated and an active-class is set
+large.onSlideChanged(() => {
+  const sPP = small.options.slidesPerPage;
+  const index = Math.floor(large.currentPage / sPP) * sPP;
+  small.gotoPage(index, true);
+  for (let i = 0; i &lt; small.slides.length; i++) {
+    small.slides[i].classList.remove("thumbnail-slider__slide--active");
+  }
+  small.slides[large.currentPage].classList.add(
+    "thumbnail-slider__slide--active"
+  );
+});
+
+// Add eventlisteners for the click event on the thumbnails
+for (let i = 0; i &lt; small.slides.length; i++) {
+  const slide = small.slides[i];
+  slide.addEventListener("click", (e) => {
+    if (!small.wasDragged) {
+      large.gotoPage(i, true);
+    }
+  });
+}
 </code></pre>
           <div
             id="thumbnail-slider--large"
             class="thumbnail-slider thumbnail-slider--large"
           >
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/500/350');
-                "
-              ></div>
-            </div>
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/400/350');
-                "
-              ></div>
-            </div>
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/800/450');
-                "
-              ></div>
-            </div>
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/200/350');
-                "
-              ></div>
-            </div>
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/400/450');
-                "
-              ></div>
-            </div>
-            <div class="thumbnail-slider__slide">
-              <div
-                class="thumbnail-slider__content"
-                style="
-                  background-image: url('https://placekitten.com/600/350');
-                "
-              ></div>
-            </div>
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/500/350"
+            />
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/400/350"
+            />
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/800/450"
+            />
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/400/550"
+            />
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/400/450"
+            />
+            <img
+              ondragstart="return false;"
+              src="https://placekitten.com/600/350"
+            />
           </div>
           <div
             id="thumbnail-slider--small"
@@ -281,7 +290,7 @@
               <div
                 class="thumbnail-slider__content"
                 style="
-                  background-image: url('https://placekitten.com/200/350');
+                  background-image: url('https://placekitten.com/400/550');
                 "
               ></div>
             </div>
@@ -434,484 +443,512 @@
       <section class="main-section" id="documentation">
         <h1 class="heading-primary">Documentation</h1>
         <article class="article">
-          <h2 class="article__title">Properties</h2>
+          <div>
+            <h2 class="article__title">Properties</h2>
 
-          <article class="property">
-            <p class="property__title">Lumens.container</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement"
-              class="property__type"
-              >HTMLElement</a
-            >
-            <p class="property__description">
-              The Element on which the slider was created.
+            <article class="property">
+              <p class="property__title">Lumens.container</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement"
+                class="property__type"
+                >HTMLElement</a
+              >
+              <p class="property__description">
+                The Element on which the slider was created.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.wrapper</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement"
+                class="property__type"
+                >HTMLElement</a
+              >
+              <p class="property__description">
+                A DOM Element created by Lumens containing all slides and placed
+                inside the container.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.slides</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection"
+                class="property__type"
+                >HTMLCollection</a
+              >
+              <p class="property__description">
+                A HTMLCollection containing all the slides of the slider. This
+                will also contain cloned slides if you enable the
+                <a href="#Options-loop">infinite loop</a>
+                option.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.options</p>
+              <a href="#options" class="property__type">Lumens.Options</a>
+              <p class="property__description">
+                The currently active options including not set, default values,
+                based on the width of the window and the responsive settings.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.initialOptions</p>
+              <a href="#options" class="property__type">Lumens.Options</a>
+              <p class="property__description">
+                The options passed to the slider upon creation.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.currentPosX</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The current offset on the X-Axis
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.currentPage</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The current slide that is shown. If there are more than one
+                slide per page the first visible slide on the left is used as
+                the current one. This value starts at the number zero
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.logWarnings</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If this is set to true, the slideshow might log warnings or
+                unpredictable behaviour.
+              </p>
+            </article>
+
+            <article class="property">
+              <p class="property__title">Lumens.autoplayInterval</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The amount of milliseconds until the slideshow will continue to
+                the next slide automatically. If set to zero, there will be no
+                autoplay.
+              </p>
+            </article>
+            <hr />
+            <br />
+          </div>
+
+          <div>
+            <h2 class="article__title" id="options">Options</h2>
+
+            <article class="property property--option">
+              <p class="property__title">Options.slidesPerPage</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The amount of slides that should be displayed in a single page
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.preventSelection</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                Will set 'userSelect' to none if set to true
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.freeScroll</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to true, the slideshow will no longer jump to the closest
+                slide on stop drag
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.animationSpeed</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                Amount of milliseconds it takes to animate to a page
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.responsive</p>
+              <a href="#ResponsiveObject" class="property__type"
+                >ResponsiveObject[]</a
+              >
+              <p class="property__description">
+                Special options for certain screen widths
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title" id="Options-loop">Options.loop</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to true, the slider can be scrolled infinitly
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title" id="Options-loop">
+                Options.variableHeight
+              </p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to false, the slideshow will always be as high as the
+                largest slide in it. If set to true the height will change based
+                on the currently visible slide.<br><strong>Not recommended with
+                more than 1 slides per page.</strong>
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.startingPage</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The page the slideshow should start on
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.autoplay</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                Amount of milliseconds until the slideshow goes to the next
+                slide automatically
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.draggable</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to false, the slideshow will not be draggable with mouse-
+                or touch-events
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.preventTouchDrag</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to true touch devices can not scroll left/right or
+                up/down when touching the slider
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.dragThreshold</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The amount of pixels that have to be dragged to change the slide
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.inheritOptions</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to true, the responsive options that are not set will be
+                inherited by the initial options, otherwise unset options will
+                use the default
+              </p>
+            </article>
+
+            <article class="property property--option">
+              <p class="property__title">Options.arrowKeys</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
+                class="property__type"
+                >boolean</a
+              >
+              <p class="property__description">
+                If set to true, the slider can be controlled using the left and
+                right arrow key
+              </p>
+            </article>
+
+            <hr />
+            <br />
+          </div>
+
+          <div>
+            <h2 id="ResponsiveObject" class="article__title">
+              ResponsiveObject
+            </h2>
+
+            <article class="property property--interface">
+              <p class="property__title">ResponsiveObject.width</p>
+              <a
+                target="_blank"
+                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
+                class="property__type"
+                >number</a
+              >
+              <p class="property__description">
+                The window width on which the given options should become
+                active.
+              </p>
+            </article>
+
+            <article class="property property--interface">
+              <p class="property__title">ResponsiveObject.options</p>
+              <a href="#options" class="property__type">Lumens.Options</a>
+              <p class="property__description">
+                The options the slider should update on this breakpoint
+              </p>
+            </article>
+
+            <hr />
+            <br />
+          </div>
+
+          <div>
+            <h2 class="article__title">Callbacks</h2>
+            <p>
+              All the callback functions that Lumens provides can be used the
+              same way, just them in the options.
             </p>
-          </article>
 
-          <article class="property">
-            <p class="property__title">Lumens.wrapper</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement"
-              class="property__type"
-              >HTMLElement</a
-            >
-            <p class="property__description">
-              A DOM Element created by Lumens containing all slides and placed
-              inside the container.
+            <pre
+              class="language-js"
+            ><code class="language-js">const mySlider = new Lumens("#myContainer", {
+    onSlideChanged: () => {
+      alert("I just changed my Slide!");
+    }
+  });</code></pre>
+
+            <br />
+
+            <p>
+              You may also define the function outside of the constructor. This
+              works for all callbacks except onInit.
             </p>
-          </article>
 
-          <article class="property">
-            <p class="property__title">Lumens.slides</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection"
-              class="property__type"
-              >HTMLCollection</a
-            >
-            <p class="property__description">
-              A HTMLCollection containing all the slides of the slider. This
-              will also contain cloned slides if you enable the
-              <a href="#Options-loop">infinite loop</a>
-              option.
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.options</p>
-            <a href="#options" class="property__type">Lumens.Options</a>
-            <p class="property__description">
-              The currently active options including not set, default values,
-              based on the width of the window and the responsive settings.
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.initialOptions</p>
-            <a href="#options" class="property__type">Lumens.Options</a>
-            <p class="property__description">
-              The options passed to the slider upon creation.
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.currentPosX</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The current offset on the X-Axis
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.currentPage</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The current slide that is shown. If there are more than one slide
-              per page the first visible slide on the left is used as the
-              current one. This value starts at the number zero
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.logWarnings</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If this is set to true, the slideshow might log warnings or
-              unpredictable behaviour.
-            </p>
-          </article>
-
-          <article class="property">
-            <p class="property__title">Lumens.autoplayInterval</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The amount of milliseconds until the slideshow will continue to
-              the next slide automatically. If set to zero, there will be no
-              autoplay.
-            </p>
-          </article>
-
-          <hr />
-          <br />
-
-          <h2 class="article__title" id="options">Options</h2>
-
-          <article class="property property--option">
-            <p class="property__title">Options.slidesPerPage</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The amount of slides that should be displayed in a single page
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.preventSelection</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              Will set 'userSelect' to none if set to true
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.freeScroll</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to true, the slideshow will no longer jump to the closest
-              slide on stop drag
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.animationSpeed</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              Amount of milliseconds it takes to animate to a page
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.responsive</p>
-            <a href="#ResponsiveObject" class="property__type"
-              >ResponsiveObject[]</a
-            >
-            <p class="property__description">
-              Special options for certain screen widths
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title" id="Options-loop">Options.loop</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to true, the slider can be scrolled infinitly
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.startingPage</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The page the slideshow should start on
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.autoplay</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              Amount of milliseconds until the slideshow goes to the next slide
-              automatically
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.draggable</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to false, the slideshow will not be draggable with mouse-
-              or touch-events
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.preventTouchDrag</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to true touch devices can not scroll left/right or up/down
-              when touching the slider
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.dragThreshold</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The amount of pixels that have to be dragged to change the slide
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.inheritOptions</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to true, the responsive options that are not set will be
-              inherited by the initial options, otherwise unset options will use
-              the default
-            </p>
-          </article>
-
-          <article class="property property--option">
-            <p class="property__title">Options.arrowKeys</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Boolean_type"
-              class="property__type"
-              >boolean</a
-            >
-            <p class="property__description">
-              If set to true, the slider can be controlled using the left and
-              right arrow key
-            </p>
-          </article>
-
-          <hr />
-          <br />
-
-          <h2 id="ResponsiveObject" class="article__title">ResponsiveObject</h2>
-
-          <article class="property property--interface">
-            <p class="property__title">ResponsiveObject.width</p>
-            <a
-              target="_blank"
-              href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#Number_type"
-              class="property__type"
-              >number</a
-            >
-            <p class="property__description">
-              The window width on which the given options should become active.
-            </p>
-          </article>
-
-          <article class="property property--interface">
-            <p class="property__title">ResponsiveObject.options</p>
-            <a href="#options" class="property__type">Lumens.Options</a>
-            <p class="property__description">
-              The options the slider should update on this breakpoint
-            </p>
-          </article>
-
-          <hr />
-          <br />
-
-          <h2 class="article__title">Callbacks</h2>
-          <p>
-            All the callback functions that Lumens provides can be used the same
-            way, just them in the options.
-          </p>
-
-          <pre
-            class="language-js"
-          ><code class="language-js">const mySlider = new Lumens("#myContainer", {
-  onSlideChanged: () => {
+            <pre
+              class="language-js"
+            ><code class="language-js">const mySlider = new Lumens("#myContainer");
+  mySlider.onSlideChanged( () => {
     alert("I just changed my Slide!");
-  }
-});</code></pre>
+  });</code></pre>
 
-          <br />
+            <br />
 
-          <p>
-            You may also define the function outside of the constructor. This
-            works for all callbacks except onInit.
-          </p>
+            <h3 class="article__subtitle">List of all callbacks</h3>
 
-          <pre
-            class="language-js"
-          ><code class="language-js">const mySlider = new Lumens("#myContainer");
-mySlider.onSlideChanged( () => {
-  alert("I just changed my Slide!");
-});</code></pre>
+            <section id="callbacks">
+              <article class="property property--function">
+                <p class="property__title">onDragging</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called whenever the user drags the slideshow
+                </p>
+              </article>
 
-          <br />
+              <article class="property property--function">
+                <p class="property__title">onAnimating</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when an animation starts
+                </p>
+              </article>
 
-          <h3 class="article__subtitle">List of all callbacks</h3>
+              <article class="property property--function">
+                <p class="property__title">onFinishAnimating</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when an animation is finished
+                </p>
+              </article>
 
-          <section id="callbacks">
-            <article class="property property--function">
-              <p class="property__title">onDragging</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called whenever the user drags the slideshow
-              </p>
-            </article>
+              <article class="property property--function">
+                <p class="property__title">onFinishAnimating</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when an animation is finished
+                </p>
+              </article>
 
-            <article class="property property--function">
-              <p class="property__title">onAnimating</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when an animation starts
-              </p>
-            </article>
+              <article class="property property--function">
+                <p class="property__title">onInit</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when the slider finished initailizing. IMPORTANT:
+                  This function needs to be set in the constructor and cannot be
+                  defined outside.
+                </p>
+              </article>
 
-            <article class="property property--function">
-              <p class="property__title">onFinishAnimating</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when an animation is finished
-              </p>
-            </article>
+              <article class="property property--function">
+                <p class="property__title">onDestroy</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when the slider is destoyed
+                </p>
+              </article>
 
-            <article class="property property--function">
-              <p class="property__title">onFinishAnimating</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when an animation is finished
-              </p>
-            </article>
+              <article class="property property--function">
+                <p class="property__title">onChangeResponsive</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when a responsive breakpoint is reached
+                </p>
+              </article>
 
-            <article class="property property--function">
-              <p class="property__title">onInit</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when the slider finished initailizing. IMPORTANT: This
-                function needs to be set in the constructor and cannot be defined
-                outside.
-              </p>
-            </article>
+              <article class="property property--function">
+                <p class="property__title">onSlideChange</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when the slide is starting to change
+                </p>
+              </article>
 
-            <article class="property property--function">
-              <p class="property__title">onDestroy</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when the slider is destoyed
-              </p>
-            </article>
-
-            <article class="property property--function">
-              <p class="property__title">onChangeResponsive</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when a responsive breakpoint is reached
-              </p>
-            </article>
-
-            <article class="property property--function">
-              <p class="property__title">onSlideChange</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when the slide is starting to change
-              </p>
-            </article>
-
-            <article class="property property--function">
-              <p class="property__title">onSlideChanged</p>
-              <a
-                target="_blank"
-                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
-                class="property__type"
-                >Function</a
-              >
-              <p class="property__description">
-                Is called when the slide is changed
-              </p>
-            </article>
-          </section>
+              <article class="property property--function">
+                <p class="property__title">onSlideChanged</p>
+                <a
+                  target="_blank"
+                  href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function"
+                  class="property__type"
+                  >Function</a
+                >
+                <p class="property__description">
+                  Is called when the slide is changed
+                </p>
+              </article>
+            </section>
+          </div>
         </article>
       </section>
     </main>
