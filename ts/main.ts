@@ -5,8 +5,6 @@ window.onload = () => {
   initLoopSlider();
   initThumbnailSlider();
   initCallbackSlider();
-
-  new Lumens("#meineDivId");
 };
 
 const initHeaderSlider = () => {
@@ -18,7 +16,12 @@ const initHeaderSlider = () => {
 };
 
 const initDefaultSlider = () => {
-  new Lumens("#default-slider");
+  window["slide"] = new Lumens("#default-slider", {
+    loop: true,
+    slidesPerPage: 2,
+  });
+  window["el"] = document.createElement("div");
+  window["el"].innerHTML = "SLIDE!";
 };
 
 const initResponsioveSlider = () => {

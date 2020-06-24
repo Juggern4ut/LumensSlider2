@@ -222,6 +222,8 @@ var Lumens = /** @class */ (function () {
      */
     Lumens.prototype.createCloneNodes = function () {
         var _this = this;
+        var clones = this.container.querySelectorAll(".lumens__clone");
+        clones.forEach(function (clone) { return clone.remove(); });
         var startClones = [];
         var endClones = [];
         for (var i = 0; i < this.options.slidesPerPage; i++) {
@@ -646,6 +648,47 @@ var Lumens = /** @class */ (function () {
             this.gotoPage(this.slides.length - 1);
         }
         return this.currentPage;
+    };
+    /**
+     * Will add a new slide to the slideshow and update all the functionality
+     * @param position The position where the slide should be inserted. Can range from 0 to the amount of slides
+     * @param slide The HTMLElement of the slide that should be added
+     */
+    Lumens.prototype.insertSlide = function (position, slide) {
+        if (position < 0 || position > this.slides.length) {
+            throw new Error("Tried to insert a slide at a position smaller than zero or larger than amount of slides");
+        }
+        else if (!(slide instanceof HTMLElement)) {
+            throw new Error("The slide that was tried to be inserted is not an instance of an HTMLElement");
+        }
+        position = this.options.loop
+            ? position + this.options.slidesPerPage
+            : position;
+        var referenceNode = position === this.slides.length ? null : this.slides[position];
+        this.wrapper.insertBefore(slide, referenceNode);
+        this.styleSlides();
+        if (this.options.loop) {
+            this.createCloneNodes();
+        }
+        return this;
+    };
+    /**
+     * Will remove a slide to the slideshow at the give position
+     * @param position The position of the slide to remove. Can range from 0 to the amount of slides
+     */
+    Lumens.prototype.removeSlide = function (position) {
+        if (position < 0 || position > this.slides.length) {
+            throw new Error("Tried to remove non existing slide at position " + position);
+        }
+        position = this.options.loop
+            ? position + this.options.slidesPerPage
+            : position;
+        this.slides[position].remove();
+        this.styleSlides();
+        if (this.options.loop) {
+            this.createCloneNodes();
+        }
+        return this;
     };
     /**
      * Will remove all styling and the wrapper to

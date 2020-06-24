@@ -5,7 +5,6 @@ window.onload = function () {
     initLoopSlider();
     initThumbnailSlider();
     initCallbackSlider();
-    new Lumens("#meineDivId");
 };
 var initHeaderSlider = function () {
     new Lumens(".header__slider", {
@@ -15,7 +14,12 @@ var initHeaderSlider = function () {
     });
 };
 var initDefaultSlider = function () {
-    new Lumens("#default-slider");
+    window["slide"] = new Lumens("#default-slider", {
+        loop: true,
+        slidesPerPage: 2
+    });
+    window["el"] = document.createElement("div");
+    window["el"].innerHTML = "SLIDE!";
 };
 var initResponsioveSlider = function () {
     window["responsive"] = new Lumens("#responsive-slider", {
