@@ -764,7 +764,6 @@ class Lumens {
     this.setDragPosition(totalOffset, animate, changed);
     this.currentPage = page;
     if (this.options.variableHeight) {
-      let slide = this.slides[this.currentPage] as HTMLElement;
       this.wrapper.style.height =
         this.getNewWrapperHeight(this.slides[this.currentPage]) + "px";
     }
@@ -776,7 +775,7 @@ class Lumens {
    * If the last slide is reached, the slideshow will
    * either stop or go back to the beginning, based
    * on the given parameter
-   * Alias: next
+   * @alias next
    * @param loopAround If set to true, the slideshow
    * will jump to the first slide if the last slide is surpassed
    * (Will not work if infinite loop is enabled)
@@ -796,7 +795,7 @@ class Lumens {
    * If the first slide is reached, the slideshow will
    * either stop or go to the final slide, based
    * on the given parameter.
-   * Alias: previous, prev
+   * @alias previous,prev
    * @param loopAround If set to true, the slideshow
    * will jump to the last slide if the first slide is surpassed
    * (Will not work if infinite loop is enabled)
